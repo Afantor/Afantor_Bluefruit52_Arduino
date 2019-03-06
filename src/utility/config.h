@@ -1,0 +1,30 @@
+#ifndef _CONFIG_H_
+#define _CONFIG_H_
+
+// LCD Screen
+#define LCD_SDA_PIN 			(07)
+#define LCD_SCL_PIN 			(27)
+#define LCD_DC_PIN 				(16)
+#define LCD_CS_PIN 				(15)
+#define LCD_RST_PIN 			(-1)
+
+// LEDs
+#define LED1_PIN             	(17)
+#define LED2_PIN             	(19)
+
+#define LED_RED              	LED1_PIN
+#define LED_BLUE             	LED2_PIN
+
+#define LED_1              		LED1_PIN
+#define LED_2             		LED2_PIN
+
+// Buttons
+#define BTN_A 					(0)
+#define BTN_B 					(1)
+#define BUTTON_A 				(0)
+#define BUTTON_B 				(1)
+#define BUTTON_A_PIN		 	(11)
+#define BUTTON_B_PIN 			(18)
+
+
+#endif /* SETTINGS_C */
