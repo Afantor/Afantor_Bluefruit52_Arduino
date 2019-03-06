@@ -78,7 +78,7 @@
 #include "utility/config.h"
 #include "utility/button.h"
 #include "utility/MPU6050.h"
-
+#include "utility/ST7789.h"
 
 class AfantorBluefruit52
 {
