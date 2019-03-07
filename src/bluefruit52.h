@@ -73,6 +73,7 @@
 #define _BLUEFRUIT52_H_
 
 #include <Arduino.h>
+#include <Wire.h>
 #include <bluefruit.h>
 
 #include "utility/config.h"
@@ -90,7 +91,10 @@ class AfantorBluefruit52
     #define DEBOUNCE_MS 10
     Button BtnA = Button(BUTTON_A_PIN, true, DEBOUNCE_MS);
     Button BtnB = Button(BUTTON_B_PIN, true, DEBOUNCE_MS);
-    
+
+    // LCD
+    //LCDDisplay Lcd = LCDDisplay();
+
     //MPU6050
     MPU6050 IMU = MPU6050();
   private:
@@ -98,5 +102,7 @@ class AfantorBluefruit52
 };
 
 extern AfantorBluefruit52 Bluefruit52;
+#define BF52 Bluefruit52
+#define lcd Lcd
 
 #endif

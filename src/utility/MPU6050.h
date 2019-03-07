@@ -174,7 +174,13 @@ class MPU6050
     float SelfTest[6];
     // Stores the 16-bit signed accelerometer sensor output
     int16_t accelCount[3];   
-
+    float q[4] = {1.0f, 0.0f, 0.0f, 0.0f};            // vector to hold quaternion
+    // parameters for 6 DoF sensor fusion calculations
+    float GyroMeasError = PI * (40.0f / 180.0f);     // gyroscope measurement error in rads/s (start at 60 deg/s), then reduce after ~10 s to 3
+    float beta = sqrt(3.0f / 4.0f) * GyroMeasError;  // compute beta
+    float GyroMeasDrift = PI * (2.0f / 180.0f);      // gyroscope measurement drift in rad/s/s (start at 0.0 deg/s/s)
+    float zeta = sqrt(3.0f / 4.0f) * GyroMeasDrift;  // compute zeta, the other free parameter in the Madgwick scheme usually set to a small or zero value
+    
     public:
         MPU6050(void);
         float getGres();
