@@ -10,4 +10,4 @@ Peripherals & Central library
  please support Adafruit and open-source hardware by purchasing
  products from Adafruit!
 
-# license 
+# license MIT
