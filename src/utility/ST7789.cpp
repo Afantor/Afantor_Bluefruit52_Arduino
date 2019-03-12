@@ -11,7 +11,7 @@
 #include <SPI.h>
 
 static const uint8_t PROGMEM
-  cmd_240x135[] = {                 		// Initialization commands for 7789 screens
+  cmd_135x240[] = {                 		// Initialization commands for 7789 screens
     10,                       				// 9 commands in list:
     ST7789_SWRESET,   ST_CMD_DELAY,  		// 1: Software reset, no args, w/delay
       150,                     				// 150 ms delay
@@ -23,13 +23,13 @@ static const uint8_t PROGMEM
     ST7789_MADCTL , 1,  					// 4: Memory access ctrl (directions), 1 arg:
       0x00,                   				// Row addr/col addr, bottom to top refresh
     ST7789_CASET  , 4,  					// 5: Column addr set, 4 args, no delay:
-      0x00, ST7789_240x135_XSTART,          // XSTART = 0
-	  (240+ST7789_240x135_XSTART) >> 8,
-	  (240+ST7789_240x135_XSTART) & 0xFF,   // XEND = 240
+      0x00, ST7789_135x240_XSTART,          // XSTART = 0
+	  (240+ST7789_135x240_XSTART) >> 8,
+	  (240+ST7789_135x240_XSTART) & 0xFF,   // XEND = 240
     ST7789_RASET  , 4,  					// 6: Row addr set, 4 args, no delay:
-      0x00, ST7789_240x135_YSTART,          // YSTART = 0
-      (135+ST7789_240x135_YSTART) >> 8,
-	  (135+ST7789_240x135_YSTART) & 0xFF,	// YEND = 240
+      0x00, ST7789_135x240_YSTART,          // YSTART = 0
+      (240+ST7789_135x240_YSTART) >> 8,
+	  (240+ST7789_135x240_YSTART) & 0xFF,	// YEND = 240
     ST7789_INVON ,   ST_CMD_DELAY,  		// 7: Inversion ON
       10,
     ST7789_NORON  ,   ST_CMD_DELAY,  		// 8: Normal display on, no args, w/delay
@@ -450,12 +450,12 @@ inline void LCD_ST7789::DC_LOW(void) {
 void LCD_ST7789::init(uint16_t width, uint16_t height) {
   commonInit(NULL);
 
-  _colstart = ST7789_240x135_XSTART;
-  _rowstart = ST7789_240x135_YSTART;
-  _height = 135;
-  _width = 240;
+  _colstart = ST7789_135x240_XSTART;
+  _rowstart = ST7789_135x240_YSTART;
+  _height = height;
+  _width = width;
 
-  displayInit(cmd_240x135);
+  displayInit(cmd_135x240);
 
-  setRotation(2);
+  setRotation(1);
 }

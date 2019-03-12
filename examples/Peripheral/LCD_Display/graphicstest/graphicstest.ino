@@ -8,11 +8,11 @@
 #include <bluefruit52.h> // Hardware-specific library for ST7789 (with or without CS pin)
 #include <SPI.h>
 
-#define TFT_DC    8
-#define TFT_RST   9 
-//#define TFT_CS    10 // only for displays with CS pin
-#define TFT_MOSI  11   // for hardware SPI data pin (all of available pins)
-#define TFT_SCLK  13   // for hardware SPI sclk pin (all of available pins)
+#define TFT_DC    2
+#define TFT_RST   3 
+//#define TFT_CS    31 // only for displays with CS pin
+#define TFT_MOSI  4   // for hardware SPI data pin (all of available pins)
+#define TFT_SCLK  5   // for hardware SPI sclk pin (all of available pins)
 
 //You can use different type of hardware initialization
 //using hardware SPI (11, 13 on UNO; 51, 52 on MEGA; ICSP-4, ICSP-3 on DUE and etc)
@@ -20,12 +20,12 @@
 //LCD_ST7789 tft = LCD_ST7789(TFT_DC, TFT_RST, TFT_CS); //for display with CS pin
 //or you can use software SPI on all available pins (slow)
 LCD_ST7789 tft = LCD_ST7789(TFT_DC, TFT_RST, TFT_MOSI, TFT_SCLK); //for display without CS pin
-//Arduino_ST7789 tft = Arduino_ST7789(TFT_DC, TFT_RST, TFT_MOSI, TFT_SCLK, TFT_CS); //for display with CS pin
+// LCD_ST7789 tft = LCD_ST7789(TFT_DC, TFT_RST, TFT_MOSI, TFT_SCLK, TFT_CS); //for display with CS pin
 
 float p = 3.1415926;
 
 void setup(void) {
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial.print("Hello! ST7789 TFT Test");
 
   tft.init(240, 135);   // initialize a ST7789 chip, 240x240 pixels
@@ -252,22 +252,22 @@ void tftPrintTest() {
 }
 
 void mediabuttons() {
-  // play
+  // play  
   tft.fillScreen(BLACK);
-  tft.fillRoundRect(25, 10, 78, 60, 8, WHITE);
-  tft.fillTriangle(42, 20, 42, 60, 90, 40, RED);
-  delay(500);
+  tft.fillRoundRect(25, 40, 78, 60, 8, WHITE);
+  tft.fillTriangle(42, 50, 42, 90, 90, 70, RED);
+  delay(500);  
   // pause
-  tft.fillRoundRect(25, 90, 78, 60, 8, WHITE);
-  tft.fillRoundRect(39, 98, 20, 45, 5, GREEN);
-  tft.fillRoundRect(69, 98, 20, 45, 5, GREEN);
+  tft.fillRoundRect(140, 40, 78, 60, 8, WHITE);
+  tft.fillRoundRect(154, 48, 20, 45, 5, GREEN);
+  tft.fillRoundRect(184, 48, 20, 45, 5, GREEN);
   delay(500);
   // play color
-  tft.fillTriangle(42, 20, 42, 60, 90, 40, BLUE);
+  tft.fillTriangle(42, 50, 42, 90, 90, 70, BLUE);
   delay(50);
   // pause color
-  tft.fillRoundRect(39, 98, 20, 45, 5, RED);
-  tft.fillRoundRect(69, 98, 20, 45, 5, RED);
+  tft.fillRoundRect(154, 48, 20, 45, 5, RED);
+  tft.fillRoundRect(184, 48, 20, 45, 5, RED);
   // play color
-  tft.fillTriangle(42, 20, 42, 60, 90, 40, GREEN);
+  tft.fillTriangle(42, 50, 42, 90, 90, 70, GREEN);
 }

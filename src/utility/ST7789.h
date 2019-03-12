@@ -36,11 +36,11 @@
   typedef unsigned char prog_uchar;
 #endif
 
-#define ST7789_TFTWIDTH 	240
-#define ST7789_TFTHEIGHT 	135
+#define ST7789_TFTWIDTH 	135
+#define ST7789_TFTHEIGHT 	240
 
-#define ST7789_240x135_XSTART 0
-#define ST7789_240x135_YSTART 0
+#define ST7789_135x240_XSTART 52
+#define ST7789_135x240_YSTART 40
 
 #define ST_CMD_DELAY   0x80    // special signifier for command lists
 
@@ -113,7 +113,7 @@ class LCD_ST7789 : public Adafruit_GFX {
   LCD_ST7789(int8_t DC, int8_t RST, int8_t SID, int8_t SCLK, int8_t CS = -1);
   LCD_ST7789(int8_t DC, int8_t RST, int8_t CS = -1);
 
-  void     setAddrWindow(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1),
+  void setAddrWindow(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1),
            pushColor(uint16_t color),
            fillScreen(uint16_t color),
            drawPixel(int16_t x, int16_t y, uint16_t color),
