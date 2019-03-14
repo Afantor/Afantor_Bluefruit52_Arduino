@@ -1,12 +1,14 @@
 #ifndef _CONFIG_H_
 #define _CONFIG_H_
 
+
+#define PI 						3.1415926
 // LCD Screen
 #define LCD_SDA_PIN 			(07)
 #define LCD_SCL_PIN 			(27)
 #define LCD_DC_PIN 				(16)
-#define LCD_CS_PIN 				(15)
-#define LCD_RST_PIN 			(-1)
+#define LCD_CS_PIN 				(-1)
+#define LCD_RST_PIN 			(15)
 
 // LEDs
 #define LED1_PIN             	(17)

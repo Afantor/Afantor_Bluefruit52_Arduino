@@ -85,7 +85,7 @@ class AfantorBluefruit52
 {
   public:
     AfantorBluefruit52(void); // Constructor
-    void begin(bool LCDEnable=true, bool SerialEnable=true);
+    void begin(bool LCDEnable=true, bool SerialEnable=true, bool IMUEnable=true);
     void update();
     // Button API
     #define DEBOUNCE_MS 10
@@ -93,7 +93,7 @@ class AfantorBluefruit52
     Button BtnB = Button(BUTTON_B_PIN, true, DEBOUNCE_MS);
 
     // LCD
-    //LCDDisplay Lcd = LCDDisplay();
+    LCD_ST7789 Lcd = LCD_ST7789(LCD_DC_PIN, LCD_RST_PIN, LCD_SDA_PIN, LCD_SCL_PIN);
 
     //MPU6050
     MPU6050 IMU = MPU6050();

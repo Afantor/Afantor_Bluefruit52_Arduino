@@ -9,8 +9,8 @@
 #include <bluefruit52.h>
 // The setup() function runs once each time the micro-controller starts
 void setup() {
-  // init lcd, serial
-  Bluefruit52.begin(true, true);
+  // init lcd, serial, IMU
+  Bluefruit52.begin(true, true, false);
 
 }
 

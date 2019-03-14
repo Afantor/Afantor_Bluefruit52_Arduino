@@ -45,7 +45,7 @@ AfantorBluefruit52::AfantorBluefruit52(void):isInited(0){
 
 }
 
-void AfantorBluefruit52::begin(bool LCDEnable, bool SerialEnable) {
+void AfantorBluefruit52::begin(bool LCDEnable, bool SerialEnable, bool IMUEnable) {
 
   // Correct init once
   if (isInited) return;
@@ -61,7 +61,32 @@ void AfantorBluefruit52::begin(bool LCDEnable, bool SerialEnable) {
 
   // LCD INIT
   if (LCDEnable) {
-    //Lcd.begin();
+    Lcd.init(240, 135);   // initialize a ST7789 chip, 135x240 pixels
+    Lcd.fillScreen(BLACK);
+    delay(50);
+    Lcd.setTextWrap(false);
+    Lcd.fillScreen(BLACK);
+    Lcd.setCursor(0, 0);
+    Lcd.setTextColor(RED);
+    Lcd.setTextSize(2);
+    Lcd.println(" Hello Master!");
+    Lcd.setTextColor(WHITE);
+    Lcd.setTextSize(2);
+    Lcd.println("Wellcome to BLE.");    
+    Lcd.setTextColor(YELLOW);
+    Lcd.setTextSize(1);
+    Lcd.println("");
+    Lcd.println("Hello Master, Welcome to the Bluetooth");
+    Lcd.setTextColor(GREEN);
+    Lcd.setTextSize(1);
+    Lcd.println("5.0 board, you can connect ");
+    Lcd.setTextColor(BLUE);
+    Lcd.setTextSize(1);
+    Lcd.println("everything with Bluetooth.");
+    Lcd.setTextColor(RED);
+    Lcd.setTextSize(2);
+    Lcd.println(" initializing......");
+    delay(1500);
   }
 
   // I2C init
@@ -69,29 +94,35 @@ void AfantorBluefruit52::begin(bool LCDEnable, bool SerialEnable) {
   delay(10);
 
   //MPU6050 init
-  Serial.println("MPU6050 6-DOF 16-bit motion sensor 60 ug LSB!");
- 
-   // Read the WHO_AM_I register, this is a good test of communication
-  uint8_t imu_add = IMU.readByte(MPU6050_ADDRESS, WHO_AM_I_MPU6050);  // Read WHO_AM_I register for MPU-6050
-  Serial.print("I AM ");
-  Serial.print(imu_add, HEX);  
-  Serial.print(" I Should Be ");
-  Serial.println(MPU6050_ADDRESS, HEX); // Device address is 0x68 when ADO = 0
-
-  if (imu_add == MPU6050_ADDRESS) {
-    Serial.println("MPU6050 is online...");
-    Serial.println("Bluefruit52 init OK");
-  }
-  else
+  if (IMUEnable)
   {
-    Serial.print("Could not connect to MPU6050: 0x");
-    Serial.println(imu_add, HEX);
-    while(1) // Loop forever if communication doesn't happen
-    {
-      Serial.println("Please check if the hardware device is damaged.");
-      delay(1000);
+    Serial.println("MPU6050 6-DOF 16-bit motion sensor 60 ug LSB!");
+   
+     // Read the WHO_AM_I register, this is a good test of communication
+    uint8_t imu_add = IMU.readByte(MPU6050_ADDRESS, WHO_AM_I_MPU6050);  // Read WHO_AM_I register for MPU-6050
+    Serial.print("I AM ");
+    Serial.print(imu_add, HEX);  
+    Serial.print(" I Should Be ");
+    Serial.println(MPU6050_ADDRESS, HEX); // Device address is 0x68 when ADO = 0
+
+    if (imu_add == MPU6050_ADDRESS) {
+      Serial.println("MPU6050 is online...");
+      Serial.println("Bluefruit52 init OK");
     }
+    else
+    {
+      Serial.print("Could not connect to MPU6050: 0x");
+      Serial.println(imu_add, HEX);
+      while(1) // Loop forever if communication doesn't happen
+      {
+        Serial.println("Please check if the hardware device is damaged.");
+        delay(1000);
+      }
+    }   
   }
+  Lcd.setTextColor(RED);
+  Lcd.setTextSize(2);
+  Lcd.println(" Initialize Done!");
 }
 
 void AfantorBluefruit52::update() {
