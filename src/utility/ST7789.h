@@ -42,6 +42,9 @@
 #define ST7789_135x240_XSTART 52
 #define ST7789_135x240_YSTART 40
 
+#define ST7789_240x135_XSTART 53
+#define ST7789_240x135_YSTART 40
+
 #define ST_CMD_DELAY   0x80    // special signifier for command lists
 
 #define ST7789_NOP     0x00

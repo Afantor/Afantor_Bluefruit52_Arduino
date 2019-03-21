@@ -245,29 +245,33 @@ void LCD_ST7789::setRotation(uint8_t m) {
   rotation = m % 4; // can't be higher than 3
   switch (rotation) {
    case 0:
-     writedata(ST7789_MADCTL_MX | ST7789_MADCTL_MY | ST7789_MADCTL_RGB);
-
-     _xstart = _colstart;
-     _ystart = _rowstart;
+      writedata(ST7789_MADCTL_MX | ST7789_MADCTL_MY | ST7789_MADCTL_RGB);
+      _colstart = ST7789_240x135_XSTART;
+      _rowstart = ST7789_240x135_YSTART;
+      _xstart = _colstart;
+      _ystart = _rowstart;
      break;
    case 1:
-     writedata(ST7789_MADCTL_MY | ST7789_MADCTL_MV | ST7789_MADCTL_RGB);
-
-     _ystart = _colstart;
-     _xstart = _rowstart;
+      writedata(ST7789_MADCTL_MY | ST7789_MADCTL_MV | ST7789_MADCTL_RGB);
+      _colstart = ST7789_135x240_XSTART;
+      _rowstart = ST7789_135x240_YSTART;
+      _ystart = _colstart;
+      _xstart = _rowstart;
      break;
   case 2:
-     writedata(ST7789_MADCTL_RGB);
- 
-     _xstart = _colstart;
-     _ystart = _rowstart;
+      writedata(ST7789_MADCTL_RGB);
+      _colstart = ST7789_240x135_XSTART;
+      _rowstart = ST7789_240x135_YSTART; 
+      _xstart = _colstart;
+      _ystart = _rowstart;
      break;
 
    case 3:
-     writedata(ST7789_MADCTL_MX | ST7789_MADCTL_MV | ST7789_MADCTL_RGB);
-
-     _ystart = _colstart;
-     _xstart = _rowstart;
+      writedata(ST7789_MADCTL_MX | ST7789_MADCTL_MV | ST7789_MADCTL_RGB);
+      _colstart = ST7789_135x240_XSTART;
+      _rowstart = ST7789_135x240_YSTART;
+      _ystart = _colstart;
+      _xstart = _rowstart;
      break;
   }
 }
@@ -450,12 +454,9 @@ inline void LCD_ST7789::DC_LOW(void) {
 void LCD_ST7789::init(uint16_t width, uint16_t height) {
   commonInit(NULL);
 
-  _colstart = ST7789_135x240_XSTART;
-  _rowstart = ST7789_135x240_YSTART;
   _height = height;
   _width = width;
 
   displayInit(cmd_135x240);
 
-  setRotation(1);
 }

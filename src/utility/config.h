@@ -25,8 +25,8 @@
 #define BTN_B 					(1)
 #define BUTTON_A 				(0)
 #define BUTTON_B 				(1)
-#define BUTTON_A_PIN		 	(11)
-#define BUTTON_B_PIN 			(18)
+#define BUTTON_A_PIN		 	(18)
+#define BUTTON_B_PIN 			(11)
 
 
 #endif /* SETTINGS_C */

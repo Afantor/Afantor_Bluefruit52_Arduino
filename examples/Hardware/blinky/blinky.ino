@@ -11,11 +11,11 @@
 // the setup function runs once when you press reset or power the board
 void setup() {
   // initialize digital pin LED_BUILTIN as an output.
-  pinMode(LED_1, OUTPUT);
+  pinMode(LED_2, OUTPUT);
 }
      
 // the loop function runs over and over again forever
 void loop() {
-  digitalToggle(LED_1);   // turn the LED on (HIGH is the voltage level)
-  delay(1000);              // wait for a second
+  digitalToggle(LED_2);   // turn the LED on (HIGH is the voltage level)
+  delay(500);              // wait for a second
 }

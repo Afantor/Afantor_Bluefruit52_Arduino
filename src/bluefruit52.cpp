@@ -62,6 +62,7 @@ void AfantorBluefruit52::begin(bool LCDEnable, bool SerialEnable, bool IMUEnable
   // LCD INIT
   if (LCDEnable) {
     Lcd.init(240, 135);   // initialize a ST7789 chip, 135x240 pixels
+    Lcd.setRotation(1);
     Lcd.fillScreen(BLACK);
     delay(50);
     Lcd.setTextWrap(false);
