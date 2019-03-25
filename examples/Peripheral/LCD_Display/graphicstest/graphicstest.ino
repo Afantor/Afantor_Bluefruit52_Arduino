@@ -72,9 +72,9 @@ void setup(void) {
 }
 
 void loop() {
-  BF52.Lcd.invertDisplay(true);
+  //BF52.Lcd.invertDisplay(true);
   delay(500);
-  BF52.Lcd.invertDisplay(false);
+  //BF52.Lcd.invertDisplay(false);
   delay(500);
 }
 
@@ -246,15 +246,15 @@ void mediabuttons() {
   delay(500);  
   // pause
   BF52.Lcd.fillRoundRect(140, 40, 78, 60, 8, WHITE);
-  BF52.Lcd.fillRoundRect(154, 48, 20, 45, 5, GREEN);
-  BF52.Lcd.fillRoundRect(184, 48, 20, 45, 5, GREEN);
+  BF52.Lcd.fillRoundRect(154, 48, 20, 45, 5, BLUE);
+  BF52.Lcd.fillRoundRect(184, 48, 20, 45, 5, BLUE);
   delay(500);
   // play color
-  BF52.Lcd.fillTriangle(42, 50, 42, 90, 90, 70, BLUE);
+  BF52.Lcd.fillTriangle(42, 50, 42, 90, 90, 70, GREEN);
   delay(50);
   // pause color
   BF52.Lcd.fillRoundRect(154, 48, 20, 45, 5, RED);
   BF52.Lcd.fillRoundRect(184, 48, 20, 45, 5, RED);
   // play color
-  BF52.Lcd.fillTriangle(42, 50, 42, 90, 90, 70, GREEN);
+  BF52.Lcd.fillTriangle(42, 50, 42, 90, 90, 70, BLUE);
 }
