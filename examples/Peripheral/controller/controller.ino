@@ -13,6 +13,7 @@
 *********************************************************************/
 
 #include <bluefruit.h>
+#include <bluefruit52.h>
 
 BLEUart bleuart;
 
@@ -27,7 +28,6 @@ extern uint8_t packetbuffer[];
 void setup(void)
 {
   Serial.begin(115200);
-  while ( !Serial ) delay(10);   // for nrf52840 with native usb
 
   Serial.println(F("Adafruit Bluefruit52 Controller App Example"));
   Serial.println(F("-------------------------------------------"));
@@ -90,8 +90,9 @@ void loop(void)
   // Got a packet!
   // printHex(packetbuffer, len);
 
-  // Color
-  if (packetbuffer[1] == 'C') {
+  // Color颜色拾色器
+  if (packetbuffer[1] == 'C') 
+  {
     uint8_t red = packetbuffer[2];
     uint8_t green = packetbuffer[3];
     uint8_t blue = packetbuffer[4];
@@ -104,8 +105,9 @@ void loop(void)
     Serial.println(blue, HEX);
   }
 
-  // Buttons
-  if (packetbuffer[1] == 'B') {
+  // Buttons手机模拟遥控器按键
+  if (packetbuffer[1] == 'B') 
+  {
     uint8_t buttnum = packetbuffer[2] - '0';
     boolean pressed = packetbuffer[3] - '0';
     Serial.print ("Button "); Serial.print(buttnum);
@@ -117,7 +119,8 @@ void loop(void)
   }
 
   // GPS Location
-  if (packetbuffer[1] == 'L') {
+  if (packetbuffer[1] == 'L') 
+  {
     float lat, lon, alt;
     lat = parsefloat(packetbuffer+2);
     lon = parsefloat(packetbuffer+6);
@@ -130,8 +133,9 @@ void loop(void)
     Serial.print(alt, 4); Serial.println(" meters");
   }
 
-  // Accelerometer
-  if (packetbuffer[1] == 'A') {
+  // Accelerometer手机的加速度计值
+  if (packetbuffer[1] == 'A') 
+  {
     float x, y, z;
     x = parsefloat(packetbuffer+2);
     y = parsefloat(packetbuffer+6);
@@ -142,8 +146,9 @@ void loop(void)
     Serial.print(z); Serial.println();
   }
 
-  // Magnetometer
-  if (packetbuffer[1] == 'M') {
+  // Magnetometer手机的电子罗盘值
+  if (packetbuffer[1] == 'M') 
+  {
     float x, y, z;
     x = parsefloat(packetbuffer+2);
     y = parsefloat(packetbuffer+6);
@@ -154,8 +159,9 @@ void loop(void)
     Serial.print(z); Serial.println();
   }
 
-  // Gyroscope
-  if (packetbuffer[1] == 'G') {
+  // Gyroscope手机的陀螺仪值
+  if (packetbuffer[1] == 'G') 
+  {
     float x, y, z;
     x = parsefloat(packetbuffer+2);
     y = parsefloat(packetbuffer+6);
@@ -166,8 +172,9 @@ void loop(void)
     Serial.print(z); Serial.println();
   }
 
-  // Quaternions
-  if (packetbuffer[1] == 'Q') {
+  // Quaternions手机的四元数值
+  if (packetbuffer[1] == 'Q') 
+  {
     float x, y, z, w;
     x = parsefloat(packetbuffer+2);
     y = parsefloat(packetbuffer+6);

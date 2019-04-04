@@ -20,46 +20,20 @@
  */
 
 #include <bluefruit52.h>
-#include <Wire.h>
 
-MPU6050 mpu;
+MPU6050 IMU;
 
-float aRes, gRes; // scale resolutions per LSB for the sensors
-
-#define blinkPin 17  // Blink LED on Teensy or Pro Mini when updating
+#define blinkPin 19  // Blink LED on Bluefruit52 when updating
 boolean blinkOn = false;
-
-int16_t accelCount[3];  // Stores the 16-bit signed accelerometer sensor output
-float ax, ay, az;       // Stores the real accel value in g's
-int16_t gyroCount[3];   // Stores the 16-bit signed gyro sensor output
-float gx, gy, gz;       // Stores the real gyro value in degrees per seconds
-float gyroBias[3] = {0, 0, 0}, accelBias[3] = {0, 0, 0}; // Bias corrections for gyro and accelerometer
-int16_t tempCount;   // Stores the real internal chip temperature in degrees Celsius
-float temperature;
-float SelfTest[6];
-float q[4] = {1.0f, 0.0f, 0.0f, 0.0f};            // vector to hold quaternion
-uint32_t delt_t = 0; // used to control display output rate
-uint32_t count = 0;  // used to control display output rate
-float pitch, yaw, roll;
-// parameters for 6 DoF sensor fusion calculations
-float GyroMeasError = PI * (40.0f / 180.0f);     // gyroscope measurement error in rads/s (start at 60 deg/s), then reduce after ~10 s to 3
-float beta = sqrt(3.0f / 4.0f) * GyroMeasError;  // compute beta
-float GyroMeasDrift = PI * (2.0f / 180.0f);      // gyroscope measurement drift in rad/s/s (start at 0.0 deg/s/s)
-float zeta = sqrt(3.0f / 4.0f) * GyroMeasDrift;  // compute zeta, the other free parameter in the Madgwick scheme usually set to a small or zero value
-float deltat = 0.0f;                              // integration interval for both filter schemes
-uint32_t lastUpdate = 0, firstUpdate = 0;         // used to calculate integration interval
-uint32_t Now = 0;                                 // used to calculate integration interval
 
 void setup()
 {
-  Wire.begin();
-  Serial.begin(115200);
-
+  BF52.begin(true, true, true);
   pinMode(blinkPin, OUTPUT);
   digitalWrite(blinkPin, HIGH);
 
   // Read the WHO_AM_I register, this is a good test of communication
-  uint8_t c = mpu.readByte(MPU6050_ADDRESS, WHO_AM_I_MPU6050);  // Read WHO_AM_I register for MPU-6050
+  uint8_t c = IMU.readByte(MPU6050_ADDRESS, WHO_AM_I_MPU6050);  // Read WHO_AM_I register for MPU-6050
   Serial.print("I AM ");
   Serial.print(c, HEX);
   Serial.print(" I Should Be ");
@@ -69,32 +43,34 @@ void setup()
   {
     Serial.println("MPU6050 is online...");
 
-    mpu.MPU6050SelfTest(SelfTest); // Start by performing self test and reporting values
-    //    Serial.print("x-axis self test: acceleration trim within : "); Serial.print(SelfTest[0],1); Serial.println("% of factory value");
-    //    Serial.print("y-axis self test: acceleration trim within : "); Serial.print(SelfTest[1],1); Serial.println("% of factory value");
-    //    Serial.print("z-axis self test: acceleration trim within : "); Serial.print(SelfTest[2],1); Serial.println("% of factory value");
-    //    Serial.print("x-axis self test: gyration trim within : "); Serial.print(SelfTest[3],1); Serial.println("% of factory value");
-    //    Serial.print("y-axis self test: gyration trim within : "); Serial.print(SelfTest[4],1); Serial.println("% of factory value");
-    //    Serial.print("z-axis self test: gyration trim within : "); Serial.print(SelfTest[5],1); Serial.println("% of factory value");
+    IMU.MPU6050SelfTest(IMU.SelfTest); // Start by performing self test and reporting values
+    //    Serial.print("x-axis self test: acceleration trim within : "); Serial.print(IMU.SelfTest[0],1); Serial.println("% of factory value");
+    //    Serial.print("y-axis self test: acceleration trim within : "); Serial.print(IMU.SelfTest[1],1); Serial.println("% of factory value");
+    //    Serial.print("z-axis self test: acceleration trim within : "); Serial.print(IMU.SelfTest[2],1); Serial.println("% of factory value");
+    //    Serial.print("x-axis self test: gyration trim within : "); Serial.print(IMU.SelfTest[3],1); Serial.println("% of factory value");
+    //    Serial.print("y-axis self test: gyration trim within : "); Serial.print(IMU.SelfTest[4],1); Serial.println("% of factory value");
+    //    Serial.print("z-axis self test: gyration trim within : "); Serial.print(IMU.SelfTest[5],1); Serial.println("% of factory value");
 
-    if (SelfTest[0] < 1.0f && SelfTest[1] < 1.0f && SelfTest[2] < 1.0f && SelfTest[3] < 1.0f && SelfTest[4] < 1.0f && SelfTest[5] < 1.0f) {
+    if (IMU.SelfTest[0] < 1.0f && IMU.SelfTest[1] < 1.0f && IMU.SelfTest[2] < 1.0f && IMU.SelfTest[3] < 1.0f && IMU.SelfTest[4] < 1.0f && IMU.SelfTest[5] < 1.0f) 
+    {
       Serial.println("Pass Selftest!");
 
-      mpu.calibrateMPU6050(gyroBias, accelBias); // Calibrate gyro and accelerometers, load biases in bias registers
+      IMU.calibrateMPU6050(IMU.gyroBias, IMU.accelBias); // Calibrate gyro and accelerometers, load biases in bias registers
       Serial.println("MPU6050 bias");
       Serial.println(" x\t  y\t  z  ");
-      Serial.print((int)(1000 * accelBias[0])); Serial.print('\t');
-      Serial.print((int)(1000 * accelBias[1])); Serial.print('\t');
-      Serial.print((int)(1000 * accelBias[2]));
+      Serial.print((int)(1000 * IMU.accelBias[0])); Serial.print('\t');
+      Serial.print((int)(1000 * IMU.accelBias[1])); Serial.print('\t');
+      Serial.print((int)(1000 * IMU.accelBias[2]));
       Serial.println(" mg");
 
-      Serial.print(gyroBias[0], 1); Serial.print('\t');
-      Serial.print(gyroBias[1], 1); Serial.print('\t');
-      Serial.print(gyroBias[2], 1);
+      Serial.print(IMU.gyroBias[0], 1); Serial.print('\t');
+      Serial.print(IMU.gyroBias[1], 1); Serial.print('\t');
+      Serial.print(IMU.gyroBias[2], 1);
       Serial.println(" o/s");
 
 
-      mpu.initMPU6050(); Serial.println("MPU6050 initialized for active data mode...."); // Initialize device for active mode read of acclerometer, gyroscope, and temperature
+      IMU.initMPU6050(); 
+      Serial.println("MPU6050 initialized for active data mode...."); // Initialize device for active mode read of acclerometer, gyroscope, and temperature
     }
     else
     {
@@ -108,49 +84,44 @@ void setup()
 void loop()
 {
   // If data ready bit set, all data registers have new data
-  if (mpu.readByte(MPU6050_ADDRESS, INT_STATUS) & 0x01) { // check if data ready interrupt
-    mpu.readAccelData(accelCount);  // Read the x/y/z adc values
-    aRes = mpu.getAres();
+  if (IMU.readByte(MPU6050_ADDRESS, INT_STATUS) & 0x01) { // check if data ready interrupt
+    IMU.readAccelData(IMU.accelCount);  // Read the x/y/z adc values
+    IMU.aRes = IMU.getAres();
 
     // Now we'll calculate the accleration value into actual g's
-    ax = (float)accelCount[0] * aRes; // get actual g value, this depends on scale being set
-    ay = (float)accelCount[1] * aRes;
-    az = (float)accelCount[2] * aRes;
+    IMU.ax = (float)IMU.accelCount[0] * IMU.aRes; // get actual g value, this depends on scale being set
+    IMU.ay = (float)IMU.accelCount[1] * IMU.aRes;
+    IMU.az = (float)IMU.accelCount[2] * IMU.aRes;
 
-    mpu.readGyroData(gyroCount);  // Read the x/y/z adc values
-    gRes = mpu.getGres();
+    IMU.readGyroData(IMU.gyroCount);  // Read the x/y/z adc values
+    IMU.gRes = IMU.getGres();
 
     // Calculate the gyro value into actual degrees per second
-    gx = (float)gyroCount[0] * gRes; // get actual gyro value, this depends on scale being set
-    gy = (float)gyroCount[1] * gRes;
-    gz = (float)gyroCount[2] * gRes;
+    IMU.gx = (float)IMU.gyroCount[0] * IMU.gRes; // get actual gyro value, this depends on scale being set
+    IMU.gy = (float)IMU.gyroCount[1] * IMU.gRes;
+    IMU.gz = (float)IMU.gyroCount[2] * IMU.gRes;
 
-    tempCount = mpu.readTempData();  // Read the x/y/z adc values
-    temperature = ((float) tempCount) / 340. + 36.53; // Temperature in degrees Centigrade
+    IMU.tempCount = IMU.readTempData();  // Read the x/y/z adc values
+    IMU.temperature = ((float) IMU.tempCount) / 340. + 36.53; // Temperature in degrees Centigrade
   }
 
-  Now = micros();
-  deltat = ((Now - lastUpdate) / 1000000.0f); // set integration time by time elapsed since last filter update
-  lastUpdate = Now;
-  //    if(lastUpdate - firstUpdate > 10000000uL) {
-  //      beta = 0.041; // decrease filter gain after stabilized
-  //      zeta = 0.015; // increase gyro bias drift gain after stabilized
-  //    }
+  IMU.updateTime();
+
   // Pass gyro rate as rad/s
-  MadgwickQuaternionUpdate(ax, ay, az, gx * PI / 180.0f, gy * PI / 180.0f, gz * PI / 180.0f);
+  MadgwickQuaternionUpdate(IMU.ax, IMU.ay, IMU.az, IMU.gx * PI / 180.0f, IMU.gy * PI / 180.0f, IMU.gz * PI / 180.0f, IMU.deltat);
 
   // Serial print and/or display at 0.5 s rate independent of data rates
-  delt_t = millis() - count;
-  if (delt_t > 500) { // update LCD once per half-second independent of read rate
+  IMU.delt_t = millis() - IMU.count;
+  if (IMU.delt_t > 500) { // update LCD once per half-second independent of read rate
     digitalWrite(blinkPin, blinkOn);
     /*
-        Serial.print("ax = "); Serial.print((int)1000*ax);
-        Serial.print(" ay = "); Serial.print((int)1000*ay);
-        Serial.print(" az = "); Serial.print((int)1000*az); Serial.println(" mg");
+        Serial.print("ax = "); Serial.print((int)1000*IMU.ax);
+        Serial.print(" ay = "); Serial.print((int)1000*IMU.ay);
+        Serial.print(" az = "); Serial.print((int)1000*IMU.az); Serial.println(" mg");
 
-        Serial.print("gx = "); Serial.print( gx, 1);
-        Serial.print(" gy = "); Serial.print( gy, 1);
-        Serial.print(" gz = "); Serial.print( gz, 1); Serial.println(" deg/s");
+        Serial.print("gx = "); Serial.print( IMU.gx, 1);
+        Serial.print(" gy = "); Serial.print( IMU.gy, 1);
+        Serial.print(" gz = "); Serial.print( IMU.gz, 1); Serial.println(" deg/s");
 
         Serial.print("q0 = "); Serial.print(q[0]);
         Serial.print(" qx = "); Serial.print(q[1]);
@@ -166,44 +137,44 @@ void loop()
     // Tait-Bryan angles as well as Euler angles are non-commutative; that is, the get the correct orientation the rotations must be
     // applied in the correct order which for this configuration is yaw, pitch, and then roll.
     // For more see http://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles which has additional links.
-    yaw   = atan2(2.0f * (q[1] * q[2] + q[0] * q[3]), q[0] * q[0] + q[1] * q[1] - q[2] * q[2] - q[3] * q[3]);
-    pitch = -asin(2.0f * (q[1] * q[3] - q[0] * q[2]));
-    roll  = atan2(2.0f * (q[0] * q[1] + q[2] * q[3]), q[0] * q[0] - q[1] * q[1] - q[2] * q[2] + q[3] * q[3]);
+    IMU.yaw   = atan2(2.0f * (IMU.q[1] * IMU.q[2] + IMU.q[0] * IMU.q[3]), IMU.q[0] * IMU.q[0] + IMU.q[1] * IMU.q[1] - IMU.q[2] * IMU.q[2] - IMU.q[3] * IMU.q[3]);
+    IMU.pitch = -asin(2.0f * (IMU.q[1] * IMU.q[3] - IMU.q[0] * IMU.q[2]));
+    IMU.roll  = atan2(2.0f * (IMU.q[0] * IMU.q[1] + IMU.q[2] * IMU.q[3]), IMU.q[0] * IMU.q[0] - IMU.q[1] * IMU.q[1] - IMU.q[2] * IMU.q[2] + IMU.q[3] * IMU.q[3]);
 
-    pitch *= 180.0f / PI;
-    yaw   *= 180.0f / PI;
-    roll  *= 180.0f / PI;
+    IMU.pitch *= 180.0f / PI;
+    IMU.yaw   *= 180.0f / PI;
+    IMU.roll  *= 180.0f / PI;
 
     Serial.print("Yaw, Pitch, Roll: ");
-    Serial.print(yaw, 2);
+    Serial.print(IMU.yaw, 2);
     Serial.print(", ");
-    Serial.print(pitch, 2);
+    Serial.print(IMU.pitch, 2);
     Serial.print(", ");
-    Serial.println(roll, 2);
+    Serial.println(IMU.roll, 2);
 
     //    Serial.print("average rate = "); Serial.print(1.0f/deltat, 2); Serial.println(" Hz");
 
     Serial.println(" x\t  y\t  z  ");
 
-    Serial.print((int)(1000 * ax)); Serial.print('\t');
-    Serial.print((int)(1000 * ay)); Serial.print('\t');
-    Serial.print((int)(1000 * az));
+    Serial.print((int)(1000 * IMU.ax)); Serial.print('\t');
+    Serial.print((int)(1000 * IMU.ay)); Serial.print('\t');
+    Serial.print((int)(1000 * IMU.az));
     Serial.println(" mg");
 
-    Serial.print((int)(gx)); Serial.print('\t');
-    Serial.print((int)(gy)); Serial.print('\t');
-    Serial.print((int)(gz));
+    Serial.print((int)(IMU.gx)); Serial.print('\t');
+    Serial.print((int)(IMU.gy)); Serial.print('\t');
+    Serial.print((int)(IMU.gz));
     Serial.println(" o/s");
 
-    Serial.print((int)(yaw)); Serial.print('\t');
-    Serial.print((int)(pitch)); Serial.print('\t');
-    Serial.print((int)(roll));
+    Serial.print((int)(IMU.yaw)); Serial.print('\t');
+    Serial.print((int)(IMU.pitch)); Serial.print('\t');
+    Serial.print((int)(IMU.roll));
     Serial.println(" ypr");
 
-    Serial.print("rt: "); Serial.print(1.0f / deltat, 2); Serial.println(" Hz");
+    Serial.print("rt: "); Serial.print(1.0f / IMU.deltat, 2); Serial.println(" Hz");
 
     blinkOn = ~blinkOn;
-    count = millis();
+    IMU.count = millis();
   }
 }
 
@@ -213,9 +184,9 @@ void loop()
 // device orientation -- which can be converted to yaw, pitch, and roll. Useful for stabilizing quadcopters, etc.
 // The performance of the orientation filter is at least as good as conventional Kalman-based filtering algorithms
 // but is much less computationally intensive---it can be performed on a 3.3 V Pro Mini operating at 8 MHz!
-void MadgwickQuaternionUpdate(float ax, float ay, float az, float gx, float gy, float gz)
+void MadgwickQuaternionUpdate(float ax, float ay, float az, float gx, float gy, float gz, float deltat)
 {
-    float q1 = q[0], q2 = q[1], q3 = q[2], q4 = q[3];         // short name local variable for readability
+    float q1 = IMU.q[0], q2 = IMU.q[1], q3 = IMU.q[2], q4 = IMU.q[3];         // short name local variable for readability
     float norm;                                               // vector norm
     float f1, f2, f3;                                         // objetive funcyion elements
     float J_11or24, J_12or23, J_13or22, J_14or21, J_32, J_33; // objective function Jacobian elements
@@ -273,9 +244,9 @@ void MadgwickQuaternionUpdate(float ax, float ay, float az, float gx, float gy, 
     gerrz = _2q1 * hatDot4 - _2q2 * hatDot3 + _2q3 * hatDot2 - _2q4 * hatDot1;
             
     // Compute and remove gyroscope biases
-    gbiasx += gerrx * deltat * zeta;
-    gbiasy += gerry * deltat * zeta;
-    gbiasz += gerrz * deltat * zeta;
+    gbiasx += gerrx * deltat * IMU.zeta;
+    gbiasy += gerry * deltat * IMU.zeta;
+    gbiasz += gerrz * deltat * IMU.zeta;
     gx -= gbiasx;
     gy -= gbiasy;
     gz -= gbiasz;
@@ -287,16 +258,16 @@ void MadgwickQuaternionUpdate(float ax, float ay, float az, float gx, float gy, 
     qDot4 =  _halfq1 * gz + _halfq2 * gy - _halfq3 * gx;
 
     // Compute then integrate estimated quaternion derivative
-    q1 += (qDot1 -(beta * hatDot1)) * deltat;
-    q2 += (qDot2 -(beta * hatDot2)) * deltat;
-    q3 += (qDot3 -(beta * hatDot3)) * deltat;
-    q4 += (qDot4 -(beta * hatDot4)) * deltat;
+    q1 += (qDot1 -(IMU.beta * hatDot1)) * deltat;
+    q2 += (qDot2 -(IMU.beta * hatDot2)) * deltat;
+    q3 += (qDot3 -(IMU.beta * hatDot3)) * deltat;
+    q4 += (qDot4 -(IMU.beta * hatDot4)) * deltat;
 
     // Normalize the quaternion
     norm = sqrt(q1 * q1 + q2 * q2 + q3 * q3 + q4 * q4);    // normalise quaternion
     norm = 1.0f/norm;
-    q[0] = q1 * norm;
-    q[1] = q2 * norm;
-    q[2] = q3 * norm;
-    q[3] = q4 * norm;
+    IMU.q[0] = q1 * norm;
+    IMU.q[1] = q2 * norm;
+    IMU.q[2] = q3 * norm;
+    IMU.q[3] = q4 * norm;
 }

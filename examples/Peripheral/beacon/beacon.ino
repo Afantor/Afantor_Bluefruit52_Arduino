@@ -12,12 +12,13 @@
  any redistribution
 *********************************************************************/
 #include <bluefruit.h>
-
-// Beacon uses the Manufacturer Specific Data field in the advertising
-// packet, which means you must provide a valid Manufacturer ID. Update
-// the field below to an appropriate value. For a list of valid IDs see:
+#include <bluefruit52.h>
+// Beacon使用广告中的制造商特定数据字段包
+// 这意味着您必须提供有效的制造商ID。 
+// 更新下面的字段为适当的值。有关有效ID的列表，请参阅:
 // https://www.bluetooth.com/specifications/assigned-numbers/company-identifiers
-// 0x004C is Apple (for example)
+
+// 0x004C is Apple (示例)
 #define MANUFACTURER_ID   0x004C 
 
 // AirLocate UUID: E2C56DB5-DFFB-48D2-B060-D0F5A71096E0
@@ -27,63 +28,62 @@ uint8_t beaconUuid[16] =
   0xB0, 0x60, 0xD0, 0xF5, 0xA7, 0x10, 0x96, 0xE0, 
 };
 
-// A valid Beacon packet consists of the following information:
+// 有效的Beacon数据包包含以下信息:
 // UUID, Major, Minor, RSSI @ 1M
 BLEBeacon beacon(beaconUuid, 0x0000, 0x0000, -54);
 
 void setup() 
 {
   Serial.begin(115200);
-  while ( !Serial ) delay(10);   // for nrf52840 with native usb
 
   Serial.println("Bluefruit52 Beacon Example");
   Serial.println("--------------------------\n");
 
   Bluefruit.begin();
 
-  // off Blue LED for lowest power consumption
+  //关闭蓝色LED以实现最低功耗
   Bluefruit.autoConnLed(false);
   
-  // Set max power. Accepted values are: -40, -30, -20, -16, -12, -8, -4, 0, 4
+  //设置最大功率，可选值有：-40, -30, -20, -16, -12, -8, -4, 0, 4
   Bluefruit.setTxPower(0);
   Bluefruit.setName("Bluefruit52");
 
-  // Manufacturer ID is required for Manufacturer Specific Data
+  // 制造商特定数据需要制造商ID
   beacon.setManufacturer(MANUFACTURER_ID);
 
-  // Setup the advertising packet
+  // 设置广播包
   startAdv();
 
   Serial.println("Broadcasting beacon, open your beacon app to test");
 
-  // Suspend Loop() to save power, since we didn't have any code there
+  // 暂停循环以节省功耗，因为我们没有任何执行代码
   suspendLoop();
 }
 
 void startAdv(void)
 {  
-  // Advertising packet
-  // Set the beacon payload using the BLEBeacon class populated
-  // earlier in this example
+  // 广告包
+  // 使用填充的BLEBeacon类设置信标有效负载
+  // 在此示例的前面
   Bluefruit.Advertising.setBeacon(beacon);
 
-  // Secondary Scan Response packet (optional)
-  // Since there is no room for 'Name' in Advertising packet
+  // 二次扫描响应包（可选）
+  // 由于广告包中没有“名称”的空间
   Bluefruit.ScanResponse.addName();
   
-  /* Start Advertising
-   * - Enable auto advertising if disconnected
-   * - Timeout for fast mode is 30 seconds
-   * - Start(timeout) with timeout = 0 will advertise forever (until connected)
+  /* 开始做广告
+   * - 如果断开连接则启用自动广告
+   * - 快速模式超时为30秒
+   * - 超时= 0的启动（超时）将永久通告（直到连接）
    * 
-   * Apple Beacon specs
-   * - Type: Non connectable, undirected
-   * - Fixed interval: 100 ms -> fast = slow = 100 ms
+   * Apple Beacon规格
+   * - 类型：不可连接，无向
+   * - 固定间隔： 100 ms -> fast = slow = 100 ms
    */
   //Bluefruit.Advertising.setType(BLE_GAP_ADV_TYPE_ADV_NONCONN_IND);
   Bluefruit.Advertising.restartOnDisconnect(true);
-  Bluefruit.Advertising.setInterval(160, 160);    // in unit of 0.625 ms
-  Bluefruit.Advertising.setFastTimeout(30);      // number of seconds in fast mode
+  Bluefruit.Advertising.setInterval(160, 160);    //以0.625毫秒为单位
+  Bluefruit.Advertising.setFastTimeout(30);      // 快速模式下的秒数 
   Bluefruit.Advertising.start(0);                // 0 = Don't stop advertising after n seconds  
 }
 

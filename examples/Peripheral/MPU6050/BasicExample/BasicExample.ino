@@ -19,110 +19,177 @@
  
  */
 #include <bluefruit52.h>
-#include <Wire.h>
 
-int16_t accelCount[3];           // Stores the 16-bit signed accelerometer sensor output
-float ax, ay, az;                // Stores the real accel value in g's
-int16_t gyroCount[3];            // Stores the 16-bit signed gyro sensor output
-float gx, gy, gz;                // Stores the real gyro value in degrees per seconds
-float gyroBias[3], accelBias[3]; // Bias corrections for gyro and accelerometer
-int16_t tempCount;               // Stores the internal chip temperature sensor output 
-float temperature;               // Scaled temperature in degrees Celsius
-float SelfTest[6];               // Gyro and accelerometer self-test sensor output
-uint32_t count = 0;
-float aRes, gRes; // scale resolutions per LSB for the sensors
-
-MPU6050 mpu;
+MPU6050 IMU;
 
 void setup()
 {
-  Wire.begin();
-  Serial.begin(115200);
-  
+  BF52.begin(true, true, true);
+
   Serial.println("MPU6050");
   Serial.println("6-DOF 16-bit");
   Serial.println("motion sensor");
   Serial.println("60 ug LSB");
- 
+
+  BF52.Lcd.fillScreen(BLACK);
+  BF52.Lcd.setTextColor(WHITE); // Set pixel color; 1 on the monochrome screen
+  BF52.Lcd.setTextSize(2);
+  BF52.Lcd.setCursor(0,0); BF52.Lcd.println("MPU6050");
+  BF52.Lcd.setTextSize(1);
+  BF52.Lcd.setCursor(0, 20); BF52.Lcd.println("6-DOF 16-bit");
+  BF52.Lcd.setCursor(0, 30); BF52.Lcd.println("motion sensor");
+  BF52.Lcd.setCursor(20,40); BF52.Lcd.println("60 ug LSB");
+  delay(1000);
+
+  // Set up for data display
+  BF52.Lcd.setTextSize(1); // Set text size to normal, 2 is twice normal etc.
+  BF52.Lcd.fillScreen(BLACK);   // clears the screen and buffer
+
    // Read the WHO_AM_I register, this is a good test of communication
-  uint8_t c = mpu.readByte(MPU6050_ADDRESS, WHO_AM_I_MPU6050);  // Read WHO_AM_I register for MPU-6050
+  uint8_t c = IMU.readByte(MPU6050_ADDRESS, WHO_AM_I_MPU6050);  // Read WHO_AM_I register for MPU-6050
   Serial.print("I AM ");
   Serial.print(c, HEX);  
   Serial.print(" I Should Be ");
   Serial.println(0x68, HEX); 
 
+  BF52.Lcd.setCursor(20,0); BF52.Lcd.print("MPU6050");
+  BF52.Lcd.setCursor(0,10); BF52.Lcd.print("I AM");
+  BF52.Lcd.setCursor(30,10); BF52.Lcd.print(c, HEX);
+  BF52.Lcd.setCursor(0,20); BF52.Lcd.print("I Should Be 0x");
+  BF52.Lcd.setCursor(84,20); BF52.Lcd.print(0x68, HEX);
+  delay(1000);
+
   if (c == 0x68) // WHO_AM_I should always be 0x68
   {  
     Serial.println("MPU6050 is online...");
     
-    mpu.MPU6050SelfTest(SelfTest); // Start by performing self test and reporting values
-    Serial.print("x-axis self test: acceleration trim within : "); Serial.print(SelfTest[0],1); Serial.println("% of factory value");
-    Serial.print("y-axis self test: acceleration trim within : "); Serial.print(SelfTest[1],1); Serial.println("% of factory value");
-    Serial.print("z-axis self test: acceleration trim within : "); Serial.print(SelfTest[2],1); Serial.println("% of factory value");
-    Serial.print("x-axis self test: gyration trim within : "); Serial.print(SelfTest[3],1); Serial.println("% of factory value");
-    Serial.print("y-axis self test: gyration trim within : "); Serial.print(SelfTest[4],1); Serial.println("% of factory value");
-    Serial.print("z-axis self test: gyration trim within : "); Serial.print(SelfTest[5],1); Serial.println("% of factory value");
+    IMU.MPU6050SelfTest(IMU.SelfTest); // Start by performing self test and reporting values
+    Serial.print("x-axis self test: acceleration trim within : "); 
+    Serial.print(IMU.SelfTest[0],1); Serial.println("% of factory value");
+    Serial.print("y-axis self test: acceleration trim within : "); 
+    Serial.print(IMU.SelfTest[1],1); Serial.println("% of factory value");
+    Serial.print("z-axis self test: acceleration trim within : "); 
+    Serial.print(IMU.SelfTest[2],1); Serial.println("% of factory value");
+    Serial.print("x-axis self test: gyration trim within : "); 
+    Serial.print(IMU.SelfTest[3],1); Serial.println("% of factory value");
+    Serial.print("y-axis self test: gyration trim within : "); 
+    Serial.print(IMU.SelfTest[4],1); Serial.println("% of factory value");
+    Serial.print("z-axis self test: gyration trim within : "); 
+    Serial.print(IMU.SelfTest[5],1); Serial.println("% of factory value");
 
-    if(SelfTest[0] < 1.0f && SelfTest[1] < 1.0f && SelfTest[2] < 1.0f && SelfTest[3] < 1.0f && SelfTest[4] < 1.0f && SelfTest[5] < 1.0f) {
-    Serial.println("Pass Selftest!");  
+    if(IMU.SelfTest[0] < 1.0f && IMU.SelfTest[1] < 1.0f && IMU.SelfTest[2] < 1.0f && IMU.SelfTest[3] < 1.0f && IMU.SelfTest[4] < 1.0f && IMU.SelfTest[5] < 1.0f) 
+    {
+      Serial.println("Pass Selftest!");  
       
-    mpu.calibrateMPU6050(gyroBias, accelBias); // Calibrate gyro and accelerometers, load biases in bias registers  
-    mpu.initMPU6050(); Serial.println("MPU6050 initialized for active data mode...."); // Initialize device for active mode read of acclerometer, gyroscope, and temperature
+      IMU.calibrateMPU6050(IMU.gyroBias, IMU.accelBias); // Calibrate gyro and accelerometers, load biases in bias registers  
+      
+      BF52.Lcd.fillScreen(BLACK);
+      BF52.Lcd.setTextSize(1);
+      BF52.Lcd.setCursor(0, 0); BF52.Lcd.print("MPU6050 bias");
+      BF52.Lcd.setCursor(0, 16); BF52.Lcd.print(" x   y   z  ");
+  
+      BF52.Lcd.setCursor(0,  32); BF52.Lcd.print((int)(1000*IMU.accelBias[0]));
+      BF52.Lcd.setCursor(32, 32); BF52.Lcd.print((int)(1000*IMU.accelBias[1]));
+      BF52.Lcd.setCursor(64, 32); BF52.Lcd.print((int)(1000*IMU.accelBias[2]));
+      BF52.Lcd.setCursor(96, 32); BF52.Lcd.print("mg");
+  
+      BF52.Lcd.setCursor(0,  48); BF52.Lcd.print(IMU.gyroBias[0], 1);
+      BF52.Lcd.setCursor(32, 48); BF52.Lcd.print(IMU.gyroBias[1], 1);
+      BF52.Lcd.setCursor(64, 48); BF52.Lcd.print(IMU.gyroBias[2], 1);
+      BF52.Lcd.setCursor(96, 48); BF52.Lcd.print("o/s");
+      delay(1000);      
 
-   }
-   else
-   {
-    Serial.print("Could not connect to MPU6050: 0x");
-    Serial.println(c, HEX);
-    while(1) ; // Loop forever if communication doesn't happen
-   }
+      IMU.initMPU6050(); 
+      Serial.println("MPU6050 initialized for active data mode...."); // Initialize device for active mode read of acclerometer, gyroscope, and temperature
 
+    }
+    else
+    {
+      Serial.print("Could not connect to MPU6050: 0x");
+      Serial.println(c, HEX);
+      while(1) ; // Loop forever if communication doesn't happen
+    }
   }
+  BF52.Lcd.setTextSize(2);
+  BF52.Lcd.setTextColor(BLUE);
+  BF52.Lcd.fillScreen(BLACK);  
+  BF52.Lcd.setCursor(0, 0); BF52.Lcd.print("MPU6050");
+  BF52.Lcd.setTextColor(GREEN);
+  BF52.Lcd.setTextSize(1);
 }
 
 void loop()
 {  
   // If data ready bit set, all data registers have new data
-  if(mpu.readByte(MPU6050_ADDRESS, INT_STATUS) & 0x01) {  // check if data ready interrupt
-
-    mpu.readAccelData(accelCount);  // Read the x/y/z adc values
-    aRes=mpu.getAres();
+  if(IMU.readByte(MPU6050_ADDRESS, INT_STATUS) & 0x01)   // check if data ready interrupt
+  {
+    IMU.readAccelData(IMU.accelCount);  // Read the x/y/z adc values
+    IMU.aRes=IMU.getAres();
     
     // Now we'll calculate the accleration value into actual g's
-    ax = (float)accelCount[0]*aRes - accelBias[0];  // get actual g value, this depends on scale being set
-    ay = (float)accelCount[1]*aRes - accelBias[1];   
-    az = (float)accelCount[2]*aRes - accelBias[2];  
+    IMU.ax = (float)IMU.accelCount[0]*IMU.aRes - IMU.accelBias[0];  // get actual g value, this depends on scale being set
+    IMU.ay = (float)IMU.accelCount[1]*IMU.aRes - IMU.accelBias[1];   
+    IMU.az = (float)IMU.accelCount[2]*IMU.aRes - IMU.accelBias[2];  
    
-    mpu.readGyroData(gyroCount);  // Read the x/y/z adc values
-    gRes=mpu.getGres();
+    IMU.readGyroData(IMU.gyroCount);  // Read the x/y/z adc values
+    IMU.gRes=IMU.getGres();
  
     // Calculate the gyro value into actual degrees per second
-    gx = (float)gyroCount[0]*gRes - gyroBias[0];  // get actual gyro value, this depends on scale being set
-    gy = (float)gyroCount[1]*gRes - gyroBias[1];  
-    gz = (float)gyroCount[2]*gRes - gyroBias[2];   
+    IMU.gx = (float)IMU.gyroCount[0]*IMU.gRes - IMU.gyroBias[0];  // get actual gyro value, this depends on scale being set
+    IMU.gy = (float)IMU.gyroCount[1]*IMU.gRes - IMU.gyroBias[1];  
+    IMU.gz = (float)IMU.gyroCount[2]*IMU.gRes - IMU.gyroBias[2];   
 
-    tempCount = mpu.readTempData();  // Read the x/y/z adc values
-    temperature = ((float) tempCount) / 340. + 36.53; // Temperature in degrees Centigrade
-   }  
-   
-    uint32_t deltat = millis() - count;
-    if(deltat > 500) {
- 
+    IMU.tempCount = IMU.readTempData();  // Read the x/y/z adc values
+    IMU.temperature = ((float) IMU.tempCount) / 340. + 36.53; // Temperature in degrees Centigrade
+  }  
+  // Must be called before updating quaternions!
+  IMU.updateTime();
+
+  IMU.delt_t = millis() - IMU.count;
+  if(IMU.delt_t > 500) 
+  {
+
     // Print acceleration values in milligs!
-    Serial.print("X-acceleration: "); Serial.print(1000*ax); Serial.print(" mg "); 
-    Serial.print("Y-acceleration: "); Serial.print(1000*ay); Serial.print(" mg "); 
-    Serial.print("Z-acceleration: "); Serial.print(1000*az); Serial.println(" mg"); 
- 
-    // Print gyro values in degree/sec
-    Serial.print("X-gyro rate: "); Serial.print(gx, 1); Serial.print(" degrees/sec "); 
-    Serial.print("Y-gyro rate: "); Serial.print(gy, 1); Serial.print(" degrees/sec "); 
-    Serial.print("Z-gyro rate: "); Serial.print(gz, 1); Serial.println(" degrees/sec"); 
-    
-   // Print temperature in degrees Centigrade      
-    Serial.print("Temperature is ");  Serial.print(temperature, 2);  Serial.println(" degrees C"); // Print T values to tenths of s degree C
-    Serial.println("");
-        
-    count = millis();
-    }
+    Serial.print("X-acceleration: "); 
+    Serial.print(1000*IMU.ax); 
+    Serial.print(" mg "); 
+    Serial.print("Y-acceleration: "); 
+    Serial.print(1000*IMU.ay); 
+    Serial.print(" mg "); 
+    Serial.print("Z-acceleration: "); 
+    Serial.print(1000*IMU.az); 
+    Serial.println(" mg"); 
 
+    // Print gyro values in degree/sec
+    Serial.print("X-gyro rate: "); 
+    Serial.print(IMU.gx, 3); 
+    Serial.print(" degrees/sec "); 
+    Serial.print("Y-gyro rate: "); 
+    Serial.print(IMU.gy, 3); 
+    Serial.print(" degrees/sec "); 
+    Serial.print("Z-gyro rate: "); 
+    Serial.print(IMU.gz, 3); 
+    Serial.println(" degrees/sec"); 
+    
+    // Print temperature in degrees Centigrade      
+    Serial.print("Temperature is: ");  
+    Serial.print(IMU.temperature, 2);  
+    Serial.println(" °C"); // Print T values to tenths of s degree C
+    Serial.println("");
+
+    IMU.count = millis();
+  }
+
+  BF52.Lcd.setCursor(0, 32); BF52.Lcd.print(" X   Y    Z  ");
+  BF52.Lcd.setCursor(96, 48); BF52.Lcd.print("mg");
+  BF52.Lcd.setCursor(96, 64); BF52.Lcd.print("o/s");
+  BF52.Lcd.setCursor(0,  96); BF52.Lcd.print("Gyro T ");
+  BF52.Lcd.setCursor(0,  48); BF52.Lcd.print((int)(1000*IMU.ax));
+  BF52.Lcd.setCursor(32, 48); BF52.Lcd.print((int)(1000*IMU.ay));
+  BF52.Lcd.setCursor(64, 48); BF52.Lcd.print((int)(1000*IMU.az));
+  BF52.Lcd.setCursor(0,  64); BF52.Lcd.print((int)(IMU.gx));
+  BF52.Lcd.setCursor(32, 64); BF52.Lcd.print((int)(IMU.gy));
+  BF52.Lcd.setCursor(64, 64); BF52.Lcd.print((int)(IMU.gz));
+  BF52.Lcd.setCursor(50, 96); BF52.Lcd.print(IMU.temperature, 1);
+  BF52.Lcd.print(" C");
 }

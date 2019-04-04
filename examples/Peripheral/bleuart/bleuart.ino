@@ -12,7 +12,7 @@
  any redistribution
 *********************************************************************/
 #include <bluefruit.h>
-
+#include <bluefruit52.h>
 // BLE Service
 BLEDis  bledis;  // device information
 BLEUart bleuart; // uart over ble
@@ -21,7 +21,6 @@ BLEBas  blebas;  // battery
 void setup()
 {
   Serial.begin(115200);
-  while ( !Serial ) delay(10);   // for nrf52840 with native usb
   
   Serial.println("Bluefruit52 BLEUART Example");
   Serial.println("---------------------------\n");

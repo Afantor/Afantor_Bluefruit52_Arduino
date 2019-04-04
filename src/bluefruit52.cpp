@@ -76,7 +76,6 @@ void AfantorBluefruit52::begin(bool LCDEnable, bool SerialEnable, bool IMUEnable
     Lcd.println("Wellcome to BLE.");    
     Lcd.setTextColor(YELLOW);
     Lcd.setTextSize(1);
-    Lcd.println("");
     Lcd.println("Hello Master, Welcome to the Bluetooth");
     Lcd.setTextColor(GREEN);
     Lcd.setTextSize(1);
@@ -109,21 +108,37 @@ void AfantorBluefruit52::begin(bool LCDEnable, bool SerialEnable, bool IMUEnable
     if (imu_add == MPU6050_ADDRESS) {
       Serial.println("MPU6050 is online...");
       Serial.println("Bluefruit52 init OK");
+      if (LCDEnable) {
+        Lcd.setTextColor(BLUE);
+        Lcd.setTextSize(2);
+        Lcd.println(" MPU6050 is online!");
+      }      
     }
     else
     {
       Serial.print("Could not connect to MPU6050: 0x");
       Serial.println(imu_add, HEX);
+      if (LCDEnable) {
+        Lcd.setTextColor(YELLOW);
+        Lcd.setTextSize(2);
+        Lcd.println(" MPU6050 is Error!");
+        Lcd.setTextColor(BLUE);
+        Lcd.setTextSize(2);
+        Lcd.println(" Press RESET Again!");
+      }
       while(1) // Loop forever if communication doesn't happen
       {
         Serial.println("Please check if the hardware device is damaged.");
-        delay(1000);
+        delay(1000); 
       }
     }   
   }
-  Lcd.setTextColor(RED);
-  Lcd.setTextSize(2);
-  Lcd.println(" Initialize Done!");
+  if (LCDEnable) {
+    Lcd.setTextColor(RED);
+    Lcd.setTextSize(2);
+    Lcd.println(" Initialize Done!");
+    delay(1000);
+  }
 }
 
 void AfantorBluefruit52::update() {
