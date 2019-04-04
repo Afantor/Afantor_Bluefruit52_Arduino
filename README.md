@@ -12,11 +12,11 @@ Welcome to program with Bluefruit52 nRF52832 Core
 
 *1.For MacOS*
 
-https://
+Coming soon...
 
 *2. For Windows*
 
-https://
+Coming soon...
 
 
 ## 2. Example
@@ -25,7 +25,7 @@ https://github.com/Afantor/Afantor_Bluefruit52_Arduino/tree/master/examples
 
 ## 3. API Reference
 
-https://github.com/Afantor/Afantor_Bluefruit52_Arduino/blob/master/src/bluefruit52.h#L19
+https://github.com/Afantor/Afantor_Bluefruit52_Arduino/blob/master/src/bluefruit52.h#L49
 
 ## 4. H/W Reference
 
@@ -39,7 +39,7 @@ https://github.com/Afantor/Afantor_Bluefruit52_Arduino/blob/master/src/bluefruit
 
 <table>
  <tr><td>nRF52 Chip</td><td>P0.07</td><td>P0.27</td><td>P0.16</td><td>P0.15</td><td>GND</td><td>VCC</td></tr>
- <tr><td>ST7789</td><td>SDA</td><td>SCL</td><td>DC</td><td>RST</td><td>CS</td><td>BL</td><td> </td></tr>
+ <tr><td>ST7789</td><td>SDA</td><td>SCL</td><td>DC</td><td>RST</td><td>CS</td><td>BL</td></tr>
 
 </table>
 
@@ -64,4 +64,4 @@ https://github.com/Afantor/Afantor_Bluefruit52_Arduino/blob/master/src/bluefruit
 
 ## 5. Awesome Project
 
-* [App-Controller](https://github.com/Afantor/Afantor_Bluefruit52_Arduino/tree/master/examples/Peripheral/controller)  
+* [App-Controller](https://github.com/Afantor/Afantor_Bluefruit52_Arduino/tree/master/examples/Peripheral/controller)  This examples shows you you can use the BLEUart helper class and the Bluefruit LE Connect applications to send based keypad and sensor data to your nRF52.
