@@ -59,8 +59,8 @@ https://github.com/Afantor/Afantor_Bluefruit52_Arduino/blob/master/src/bluefruit
 
 
 ### M-バス
-![image](docs/images/nRF52_Pinout_v2.1.png)
-![image](docs/images/nRF52_pinout.jpg)
+![image](images/nRF52_Pinout_v2.1.png)
+![image](images/nRF52_pinout.jpg)
 
 ## 5. 素晴らしい応用例
 
