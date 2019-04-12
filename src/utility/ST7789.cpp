@@ -59,7 +59,7 @@ inline uint16_t swapcolor(uint16_t x) {
 
 // Constructor when using software SPI.  All output pins are configurable.
 LCD_ST7789::LCD_ST7789(int8_t dc, int8_t rst, int8_t sid, int8_t sclk, int8_t cs) 
-  : Adafruit_GFX(ST7789_TFTWIDTH, ST7789_TFTHEIGHT)
+  : Afantor_GFX(ST7789_TFTWIDTH, ST7789_TFTHEIGHT)
 {
   _cs   = cs;
   _dc   = dc;
@@ -72,7 +72,7 @@ LCD_ST7789::LCD_ST7789(int8_t dc, int8_t rst, int8_t sid, int8_t sclk, int8_t cs
 // Constructor when using hardware SPI.  Faster, but must use SPI pins
 // specific to each board type (e.g. 11,13 for Uno, 51,52 for Mega, etc.)
 LCD_ST7789::LCD_ST7789(int8_t dc, int8_t rst, int8_t cs) 
-  : Adafruit_GFX(ST7789_TFTWIDTH, ST7789_TFTHEIGHT) {
+  : Afantor_GFX(ST7789_TFTWIDTH, ST7789_TFTHEIGHT) {
   _cs   = cs;
   _dc   = dc;
   _rst  = rst;

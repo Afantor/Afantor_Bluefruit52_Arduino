@@ -50,6 +50,60 @@
         Bluefruit52.update();
 
     LCD:
+        BF52.Lcd.setAddrWindow(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1);
+        BF52.Lcd.pushColor(uint16_t color);
+        BF52.Lcd.fillScreen(uint16_t color);
+        BF52.Lcd.drawPixel(int16_t x, int16_t y, uint16_t color);
+        BF52.Lcd.drawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
+        BF52.Lcd.drawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
+        BF52.Lcd.fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
+        BF52.Lcd.setRotation(uint8_t r);
+        BF52.Lcd.invertDisplay(boolean i);
+        BF52.Lcd.init(uint16_t width, uint16_t height);
+
+        BF52.Lcd.drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color),
+        BF52.Lcd.drawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
+        BF52.Lcd.drawCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color),
+        BF52.Lcd.drawCircleHelper(int16_t x0, int16_t y0, int16_t r, uint8_t cornername,uint16_t color),
+        BF52.Lcd.fillCircle(int16_t x0, int16_t y0, int16_t r, uint16_t color),
+        BF52.Lcd.fillCircleHelper(int16_t x0, int16_t y0, int16_t r, uint8_t cornername,int16_t delta, uint16_t color),
+        BF52.Lcd.drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color),
+        BF52.Lcd.fillTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color),
+        BF52.Lcd.drawRoundRect(int16_t x0, int16_t y0, int16_t w, int16_t h, int16_t radius, uint16_t color),
+        BF52.Lcd.fillRoundRect(int16_t x0, int16_t y0, int16_t w, int16_t h, int16_t radius, uint16_t color),
+        BF52.Lcd.drawBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h, uint16_t color),
+        BF52.Lcd.drawBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h, uint16_t color, uint16_t bg),
+        BF52.Lcd.drawBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h, uint16_t color),
+        BF52.Lcd.drawBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg),
+        BF52.Lcd.drawXBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h, uint16_t color),
+        BF52.Lcd.drawGrayscaleBitmap(int16_t x, int16_t y, const uint8_t bitmap[], int16_t w, int16_t h),
+        BF52.Lcd.drawGrayscaleBitmap(int16_t x, int16_t y, uint8_t *bitmap, int16_t w, int16_t h),
+        BF52.Lcd.drawGrayscaleBitmap(int16_t x, int16_t y, const uint8_t bitmap[], const uint8_t mask[], int16_t w, int16_t h),
+        BF52.Lcd.drawGrayscaleBitmap(int16_t x, int16_t y, uint8_t *bitmap, uint8_t *mask, int16_t w, int16_t h),
+        BF52.Lcd.drawRGBBitmap(int16_t x, int16_t y, const uint16_t bitmap[], int16_t w, int16_t h),
+        BF52.Lcd.drawRGBBitmap(int16_t x, int16_t y, uint16_t *bitmap, int16_t w, int16_t h),
+        BF52.Lcd.drawRGBBitmap(int16_t x, int16_t y, const uint16_t bitmap[], const uint8_t mask[], int16_t w, int16_t h),
+        BF52.Lcd.drawRGBBitmap(int16_t x, int16_t y, uint16_t *bitmap, uint8_t *mask, int16_t w, int16_t h),
+        BF52.Lcd.drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg, uint8_t size),
+        BF52.Lcd.drawText(char *text, uint16_t color),
+        BF52.Lcd.setCursor(int16_t x, int16_t y),
+        BF52.Lcd.setTextColor(uint16_t c),
+        BF52.Lcd.setTextColor(uint16_t c, uint16_t bg),
+        BF52.Lcd.setTextSize(uint8_t s),
+        BF52.Lcd.setTextWrap(boolean w),
+        BF52.Lcd.setFont(const GFXfont *f = NULL),
+        BF52.Lcd.getTextBounds(const char *string, int16_t x, int16_t y,int16_t *x1, int16_t *y1, uint16_t *w, uint16_t *h),
+        BF52.Lcd.getTextBounds(const __FlashStringHelper *s, int16_t x, int16_t y, int16_t *x1, int16_t *y1, uint16_t *w, uint16_t *h),
+        BF52.Lcd.getTextBounds(const String &str, int16_t x, int16_t y, int16_t *x1, int16_t *y1, uint16_t *w, uint16_t *h);
+             
+        BF52.Lcd.printf();
+        BF52.Lcd.print();
+        BF52.Lcd.println();
+        BF52.Lcd.drawCenterString(const char *string, int dX, int poY, int font);
+        BF52.Lcd.drawRightString(const char *string, int dX, int poY, int font);
+        BF52.Lcd.drawJpg(const uint8_t *jpg_data, size_t jpg_len, uint16_t x, uint16_t y);
+        BF52.Lcd.drawJpgFile(fs::FS &fs, const char *path, uint16_t x, uint16_t y);
+        BF52.Lcd.drawBmpFile(fs::FS &fs, const char *path, uint16_t x, uint16_t y);
 
     Button:
         Bluefruit52.BtnA/B.read();

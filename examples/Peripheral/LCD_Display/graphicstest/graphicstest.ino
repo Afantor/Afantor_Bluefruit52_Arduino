@@ -28,8 +28,8 @@ void setup(void) {
 
   // large block of text
   BF52.Lcd.fillScreen(BLACK);
-  testdrawtext("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur adipiscing ante sed nibh tincidunt feugiat. Maecenas enim massa, fringilla sed malesuada et, malesuada sit amet turpis. Sed porttitor neque ut ante pretium vitae malesuada nunc bibendum. Nullam aliquet ultrices massa eu hendrerit. Ut sed nisi lorem. In vestibulum purus a tortor imperdiet posuere. ", WHITE);
-  delay(1000);
+  BF52.Lcd.drawText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur adipiscing ante sed nibh tincidunt feugiat. Maecenas enim massa, fringilla sed malesuada et, malesuada sit amet turpis. Sed porttitor neque ut ante pretium vitae malesuada nunc bibendum. Nullam aliquet ultrices massa eu hendrerit. Ut sed nisi lorem. In vestibulum purus a tortor imperdiet posuere. ", WHITE);
+  delay(2000);
 
   // tft print function
   tftPrintTest();
@@ -37,7 +37,7 @@ void setup(void) {
 
   // a single pixel
   BF52.Lcd.drawPixel(BF52.Lcd.width()/2, BF52.Lcd.height()/2, GREEN);
-  delay(500);
+  delay(1000);
 
   // line draw test
   testlines(YELLOW);
@@ -112,12 +112,6 @@ void testlines(uint16_t color) {
   }
 }
 
-void testdrawtext(char *text, uint16_t color) {
-  BF52.Lcd.setCursor(0, 0);
-  BF52.Lcd.setTextColor(color);
-  BF52.Lcd.setTextWrap(true);
-  BF52.Lcd.print(text);
-}
 
 void testfastlines(uint16_t color1, uint16_t color2) {
   BF52.Lcd.fillScreen(BLACK);

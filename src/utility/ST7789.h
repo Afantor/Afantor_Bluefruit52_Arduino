@@ -9,7 +9,7 @@
 
 #include "Arduino.h"
 #include "Print.h"
-#include <Adafruit_GFX.h>
+#include "Afantor_GFX.h"
 
 #if defined(__AVR__) || defined(CORE_TEENSY)
   #include <avr/pgmspace.h>
@@ -109,7 +109,7 @@
 #define LGRAYBLUE        0XA651 //浅灰蓝色(中间层颜色)
 #define LBBLUE           0X2B12 //浅棕蓝色(选择条目的反色)
 
-class LCD_ST7789 : public Adafruit_GFX {
+class LCD_ST7789 : public Afantor_GFX {
 
  public:
 
