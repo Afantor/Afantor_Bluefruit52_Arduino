@@ -19,6 +19,7 @@
 
 #include <bluefruit.h>
 
+BLEDis bledis;
 BLEHidAdafruit blehid;
 
 // Array of pins and its keycode
@@ -52,9 +53,13 @@ void setup()
   Serial.println();  
 
   Bluefruit.begin();
-  // Set max power. Accepted values are: -40, -30, -20, -16, -12, -8, -4, 0, 4
-  Bluefruit.setTxPower(4);
+  Bluefruit.setTxPower(4);    // Check bluefruit.h for supported values
   Bluefruit.setName("Bluefruit52");
+
+  // Configure and Start Device Information Service
+  bledis.setManufacturer("Adafruit Industries");
+  bledis.setModel("Bluefruit Feather 52");
+  bledis.begin();
 
   // set up pin as input
   for (uint8_t i=0; i<pincount; i++)
@@ -81,7 +86,7 @@ void setup()
    * Note: It is already set by BLEHidAdafruit::begin() to 11.25ms - 15ms
    * min = 9*1.25=11.25 ms, max = 12*1.25= 15 ms 
    */
-  /* Bluefruit.setConnInterval(9, 12); */
+  /* Bluefruit.Periph.setConnInterval(9, 12); */
 
   // Set up and start advertising
   startAdv();
@@ -180,8 +185,10 @@ void loop()
  * The LED bit map is as follows: (also defined by KEYBOARD_LED_* )
  *    Kana (4) | Compose (3) | ScrollLock (2) | CapsLock (1) | Numlock (0)
  */
-void set_keyboard_led(uint8_t led_bitmap)
+void set_keyboard_led(uint16_t conn_handle, uint8_t led_bitmap)
 {
+  (void) conn_handle;
+  
   // light up Red Led if any bits is set
   if ( led_bitmap )
   {
