@@ -35,7 +35,7 @@ class Afantor_GFX : public Print {
   // optimized code.  Otherwise 'generic' versions are used.
   virtual void setRotation(uint8_t r);
   virtual void invertDisplay(boolean i);
-
+  uint32_t mypow(uint8_t m,uint8_t n);
   // BASIC DRAW API
   // These MAY be overridden by the subclass to provide device-specific
   // optimized code.  Otherwise 'generic' versions are used.
@@ -74,8 +74,8 @@ class Afantor_GFX : public Print {
     drawRGBBitmap(int16_t x, int16_t y, uint16_t *bitmap, uint8_t *mask, int16_t w, int16_t h),
     drawChar(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg, uint8_t size),
     drawText(char *text, uint16_t color),
-    drawNumber(int16_t x, int16_t y, int16_t num, uint16_t color, uint16_t bg, uint8_t size),
-    drawFloat(int16_t x, int16_t y, float num, uint16_t color, uint16_t bg, uint8_t size),
+    drawNumber(int16_t x, int16_t y, int16_t num, uint8_t len, uint16_t color, uint16_t bg, uint8_t size),
+    drawFloat(int16_t x, int16_t y, float num, uint8_t len, uint16_t color, uint16_t bg, uint8_t size),
     drawString(int16_t x, int16_t y, const char *string, uint16_t color, uint16_t bg, uint8_t size),
     setCursor(int16_t x, int16_t y),
     setTextColor(uint16_t c),

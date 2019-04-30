@@ -33,6 +33,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "Afantor_GFX.h"
 #include "glcdfont.c"
+#include "lcdfont.h"
 #ifdef __AVR__
   #include <avr/pgmspace.h>
 #elif defined(ESP8266) || defined(ESP32)
@@ -1134,6 +1135,80 @@ void Afantor_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
         endWrite();
 
     } // End classic vs custom font
+}
+// TEXT- AND CHARACTER-HANDLING FUNCTIONS ----------------------------------
+/******************************************************************************
+      函数说明：显示数字
+      入口数据：m底数，n指数
+      返回值：  无
+******************************************************************************/
+uint32_t Afantor_GFX::mypow(uint8_t m,uint8_t n)
+{
+    uint32_t result=1;   
+    while(n--)result*=m;    
+    return result;
+}
+// Draw a int number
+/**************************************************************************/
+/*!
+   @brief   Draw a single character
+    @param    x   Bottom left corner x coordinate
+    @param    y   Bottom left corner y coordinate
+    @param    num  int number
+    @param    color 16-bit 5-6-5 Color to draw chraracter with
+    @param    bg 16-bit 5-6-5 Color to fill background with (if same as color, no background)
+    @param    size  Font magnification level, 1 is 'original' size
+*/
+/**************************************************************************/
+void Afantor_GFX::drawNumber(int16_t x, int16_t y, int16_t num, uint8_t len,
+  uint16_t color, uint16_t bg, uint8_t size) {
+
+    uint8_t t,temp;
+    uint8_t enshow=0;
+    for(t=0;t<len;t++)
+    {
+        temp=(num/mypow(10,len-t-1))%10;
+        if(enshow==0&&t<(len-1))
+        {
+            if(temp==0)
+            {
+                drawChar(x+12*t,y,' ',color, bg, size);
+                continue;
+            }else enshow=1; 
+             
+        }
+        drawChar(x+12*t,y,temp+48,color, bg, size); 
+    }
+}
+// Draw a float number
+/**************************************************************************/
+/*!
+   @brief   Draw a single character
+    @param    x   Bottom left corner x coordinate
+    @param    y   Bottom left corner y coordinate
+    @param    num  float number
+    @param    color 16-bit 5-6-5 Color to draw chraracter with
+    @param    bg 16-bit 5-6-5 Color to fill background with (if same as color, no background)
+    @param    size  Font magnification level, 1 is 'original' size
+*/
+/**************************************************************************/
+void Afantor_GFX::drawFloat(int16_t x, int16_t y, float num, uint8_t len,
+  uint16_t color, uint16_t bg, uint8_t size) {
+
+    uint8_t t,temp;
+    uint16_t num1;
+    num1=num*100;
+    for(t=0;t<len;t++)
+    {
+        temp=(num1/mypow(10,len-t-1))%10;
+        if(t==(len-2))
+        {
+            drawChar(x+12*(len-2),y,'.',color, bg, size);
+            t++;
+            len+=1; 
+        }
+        drawChar(x+12*t,y,temp+48,color, bg, size); 
+    }
 }
 /**************************************************************************/
 /*!

@@ -18,11 +18,11 @@ PCA9685 pwm = PCA9685();
 //PCA9685 pwm = PCA9685(&Wire, 0x40);
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial.println("16 channel PWM test!");
 
   pwm.begin();
-  pwm.setPWMFreq(1600);  // This is the maximum PWM frequency
+  pwm.setPWMFreq(50);  // This is the maximum PWM frequency
 
   // if you want to really speed stuff up, you can go into 'fast 400khz I2C' mode
   // some i2c devices dont like this so much so if you're sharing the bus, watch

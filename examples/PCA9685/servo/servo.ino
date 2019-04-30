@@ -29,8 +29,8 @@ PCA9685 pwm = PCA9685();
 uint8_t servonum = 0;
 
 void setup() {
-  Serial.begin(9600);
-  Serial.println("8 channel Servo test!");
+  Serial.begin(115200);
+  Serial.println("4 channel Servo test!");
 
   pwm.begin();
   
@@ -62,13 +62,13 @@ void loop() {
     pwm.setPWM(servonum, 0, pulselen);
   }
 
-  delay(500);
+  delay(1000);
   for (uint16_t pulselen = SERVOMAX; pulselen > SERVOMIN; pulselen--) {
     pwm.setPWM(servonum, 0, pulselen);
   }
 
-  delay(500);
+  delay(1000);
 
   servonum ++;
-  if (servonum > 7) servonum = 0;
+  if (servonum > 4) servonum = 0;
 }
