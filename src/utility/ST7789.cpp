@@ -239,6 +239,13 @@ void LCD_ST7789::commonInit(const uint8_t *cmdList) {
     displayInit(cmdList);
 }
 
+void LCD_ST7789::showEnable(void) {
+  digitalWrite(24, LOW);
+}
+void LCD_ST7789::showDisable(void) {
+  digitalWrite(24, HIGH);
+}
+
 void LCD_ST7789::setRotation(uint8_t m) {
 
   writecommand(ST7789_MADCTL);

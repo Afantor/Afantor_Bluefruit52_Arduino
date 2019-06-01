@@ -21,7 +21,7 @@ double y;
 // our servo # counter
 uint8_t servonum = 0;
 
-int Bpin = A0;  // P0.28 Pin analog pin used to connect the potentiometer
+int Bpin = 9;  // P0.28 Pin analog pin used to connect the potentiometer
 int Xpin = A2;
 int Ypin = A1;
 
@@ -136,10 +136,12 @@ void loop() {
 
   if(valB == 1){
       setServoAngle(3, 40);
+      
   }
   else
   {
     setServoAngle(3, 170);
+    Serial.println("Hello");
   }
   delay(20);  
 }

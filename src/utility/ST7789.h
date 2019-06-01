@@ -128,7 +128,8 @@ class LCD_ST7789 : public Afantor_GFX {
 		   init(uint16_t width, uint16_t height);
   uint16_t Color565(uint8_t r, uint8_t g, uint8_t b);
   uint16_t color565(uint8_t r, uint8_t g, uint8_t b) { return Color565(r, g, b); } 
-
+  void showEnable(void);
+  void showDisable(void);
  protected:
   uint8_t  _colstart, _rowstart, _xstart, _ystart; // some displays need this changed
 

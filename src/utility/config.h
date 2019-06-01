@@ -7,8 +7,8 @@
 #define LCD_SDA_PIN 			(7)
 #define LCD_SCL_PIN 			(27)
 #define LCD_DC_PIN 				(16)
-#define LCD_CS_PIN 				(-1)
-#define LCD_RST_PIN 			(15)
+#define LCD_RST_PIN 			(23)
+#define LCD_CS_PIN 				(24)
 
 // LEDs
 #define LED1_PIN             	(17)

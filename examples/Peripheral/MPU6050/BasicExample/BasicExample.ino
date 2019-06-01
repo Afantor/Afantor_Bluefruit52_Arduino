@@ -113,9 +113,28 @@ void setup()
   BF52.Lcd.setTextSize(2);
   BF52.Lcd.setTextColor(BLUE);
   BF52.Lcd.fillScreen(BLACK);  
-  BF52.Lcd.setCursor(0, 0); BF52.Lcd.print("MPU6050");
-  BF52.Lcd.setTextColor(GREEN);
-  BF52.Lcd.setTextSize(1);
+  BF52.Lcd.setCursor(0, 0); BF52.Lcd.print("MPU6050 Date:");
+
+  BF52.Lcd.drawChar(0, 20, 'X', GREEN, BLACK, 2);
+  BF52.Lcd.drawChar(70, 20, 'Y', GREEN, BLACK, 2);
+  BF52.Lcd.drawChar(140, 20, 'Z', GREEN, BLACK, 2);
+  BF52.Lcd.drawChar(190, 40, 'm', GREEN, BLACK, 2);
+  BF52.Lcd.drawChar(202, 40, 'g', GREEN, BLACK, 2);
+  BF52.Lcd.drawChar(190, 60, 'o', GREEN, BLACK, 2);
+  BF52.Lcd.drawChar(202, 60, '/', GREEN, BLACK, 2);
+  BF52.Lcd.drawChar(214, 60, 's', GREEN, BLACK, 2);
+
+  BF52.Lcd.drawChar(0, 100, 'T', RED, BLACK, 2);
+  BF52.Lcd.drawChar(12, 100, 'e', RED, BLACK, 2);
+  BF52.Lcd.drawChar(24, 100, 'm', RED, BLACK, 2);
+  BF52.Lcd.drawChar(36, 100, 'p', RED, BLACK, 2);
+  BF52.Lcd.drawChar(48, 100, ':', RED, BLACK, 2);
+  BF52.Lcd.drawChar(190, 100, 'C', GREEN, BLACK, 2);
+
+  // BF52.Lcd.setCursor(0, 32); BF52.Lcd.print(" X   Y    Z  ");
+  // BF52.Lcd.setCursor(96, 48); BF52.Lcd.print("mg");
+  // BF52.Lcd.setCursor(96, 64); BF52.Lcd.print("o/s");
+  // BF52.Lcd.setCursor(0,  96); BF52.Lcd.print("Gyro T ");
 }
 
 void loop()
@@ -180,16 +199,19 @@ void loop()
     IMU.count = millis();
   }
 
-  BF52.Lcd.setCursor(0, 32); BF52.Lcd.print(" X   Y    Z  ");
-  BF52.Lcd.setCursor(96, 48); BF52.Lcd.print("mg");
-  BF52.Lcd.setCursor(96, 64); BF52.Lcd.print("o/s");
-  BF52.Lcd.setCursor(0,  96); BF52.Lcd.print("Gyro T ");
-  BF52.Lcd.setCursor(0,  48); BF52.Lcd.print((int)(1000*IMU.ax));
-  BF52.Lcd.setCursor(32, 48); BF52.Lcd.print((int)(1000*IMU.ay));
-  BF52.Lcd.setCursor(64, 48); BF52.Lcd.print((int)(1000*IMU.az));
-  BF52.Lcd.setCursor(0,  64); BF52.Lcd.print((int)(IMU.gx));
-  BF52.Lcd.setCursor(32, 64); BF52.Lcd.print((int)(IMU.gy));
-  BF52.Lcd.setCursor(64, 64); BF52.Lcd.print((int)(IMU.gz));
-  BF52.Lcd.setCursor(50, 96); BF52.Lcd.print(IMU.temperature, 1);
-  BF52.Lcd.print(" C");
+  BF52.Lcd.drawNumber(0, 40, (int)(1000*IMU.ax), 4, GREEN, BLACK, 2);
+  BF52.Lcd.drawNumber(60, 40, (int)(1000*IMU.ay), 4, GREEN, BLACK, 2);
+  BF52.Lcd.drawNumber(120, 40, (int)(1000*IMU.az), 4, GREEN, BLACK, 2);
+  BF52.Lcd.drawNumber(0, 60, (int)(IMU.gx), 4, GREEN, BLACK, 2);
+  BF52.Lcd.drawNumber(60, 60, (int)(IMU.gy), 4, GREEN, BLACK, 2);
+  BF52.Lcd.drawNumber(120, 60, (int)(IMU.gz), 4, GREEN, BLACK, 2);
+  BF52.Lcd.drawFloat(80, 100, IMU.temperature, 4, YELLOW, BLACK, 2);
+  // BF52.Lcd.setCursor(0,  48); BF52.Lcd.print((int)(1000*IMU.ax));
+  // BF52.Lcd.setCursor(32, 48); BF52.Lcd.print((int)(1000*IMU.ay));
+  // BF52.Lcd.setCursor(64, 48); BF52.Lcd.print((int)(1000*IMU.az));
+  // BF52.Lcd.setCursor(0,  64); BF52.Lcd.print((int)(IMU.gx));
+  // BF52.Lcd.setCursor(32, 64); BF52.Lcd.print((int)(IMU.gy));
+  // BF52.Lcd.setCursor(64, 64); BF52.Lcd.print((int)(IMU.gz));
+  // BF52.Lcd.setCursor(50, 96); BF52.Lcd.print(IMU.temperature, 1);
+  // BF52.Lcd.print(" C");
 }

@@ -60,15 +60,17 @@ void loop() {
   Serial.println(servonum);
   for (uint16_t pulselen = SERVOMIN; pulselen < SERVOMAX; pulselen++) {
     pwm.setPWM(servonum, 0, pulselen);
+    delay(2);
   }
 
   delay(1000);
   for (uint16_t pulselen = SERVOMAX; pulselen > SERVOMIN; pulselen--) {
     pwm.setPWM(servonum, 0, pulselen);
+    delay(2);
   }
 
   delay(1000);
 
   servonum ++;
-  if (servonum > 4) servonum = 0;
+  if (servonum > 1) servonum = 0;
 }
