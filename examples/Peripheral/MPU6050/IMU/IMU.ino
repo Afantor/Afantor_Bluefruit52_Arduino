@@ -102,7 +102,7 @@ void loop()
     IMU.gz = (float)IMU.gyroCount[2] * IMU.gRes;
 
     IMU.tempCount = IMU.readTempData();  // Read the x/y/z adc values
-    IMU.temperature = ((float) IMU.tempCount) / 340. + 36.53; // Temperature in degrees Centigrade
+    IMU.temperature = ((float) IMU.tempCount) / 340.0 + 36.53; // Temperature in degrees Centigrade
   }
 
   IMU.updateTime();

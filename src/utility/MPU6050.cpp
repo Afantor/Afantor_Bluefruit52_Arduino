@@ -376,7 +376,6 @@ void MPU6050::MPU6050SelfTest(float * destination) // Should return percent devi
   for (int i = 0; i < 6; i++) {
     destination[i] = 100.0 + 100.0 * ((float)selfTest[i] - factoryTrim[i]) / factoryTrim[i]; // Report percent differences
   }
-
 }
 
 void MPU6050::writeByte(uint8_t address, uint8_t subAddress, uint8_t data)
