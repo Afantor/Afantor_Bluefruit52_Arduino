@@ -38,7 +38,7 @@ https://github.com/Afantor/Afantor_Bluefruit52_Arduino/blob/master/src/bluefruit
 *LCD 解像度: 135x240*
 
 <table>
- <tr><td>nRF52 Chip</td><td>P0.07</td><td>P0.27</td><td>P0.16</td><td>P0.15</td><td>GND</td><td>VCC</td></tr>
+ <tr><td>nRF52 Chip</td><td>P0.07</td><td>P0.27</td><td>P0.16</td><td>P0.23</td><td>P0.24</td><td>~CS</td></tr>
  <tr><td>ST7789</td><td>SDA</td><td>SCL</td><td>DC</td><td>RST</td><td>CS</td><td>BL</td></tr>
 
 </table>
@@ -59,8 +59,8 @@ https://github.com/Afantor/Afantor_Bluefruit52_Arduino/blob/master/src/bluefruit
 
 
 ### M-バス
-![image](images/nRF52_Pinout_v2.1.png)
-![image](images/nRF52_pinout.jpg)
+![image](images/Bluefruit52_Pinconfig.png)
+![image](images/Bluefruit52_Pinout.png)
 
 ## 5. 素晴らしい応用例
 

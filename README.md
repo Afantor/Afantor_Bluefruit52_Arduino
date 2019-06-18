@@ -16,7 +16,7 @@ Coming soon...
 
 *2. For Windows*
 
-Coming soon...
+* [Install the Bluefruit52 board for Arduino](https://github.com/Afantor/Afantor_Bluefruit52_Arduino/tree/master/docs/getting_started_setting.md) 
 
 
 ## 2. Example

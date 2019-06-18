@@ -1,107 +1,69 @@
-﻿# nRF52832 Bluefruit Arduino — 快速上手
+﻿# nRF52832 Bluefruit 库
+
+English(../README.md) | [中文] | [日本語](docs/getting_started_ja.md)
+
+## 1. 上手指南
+
+*1.For MacOS*
+
+Coming soon...
+
+*2. For Windows*
+
+* [Install the Bluefruit52 board for Arduino](https://github.com/Afantor/Afantor_Bluefruit52_Arduino/tree/master/docs/getting_started_setting.md) 
 
 
-## 一、安装 USB 驱动
+## 2. 例程
 
-点击以下链接，下载 nRF52832 Bluefruit52的 USB 转串口驱动CP2102
+https://github.com/Afantor/Afantor_Bluefruit52_Arduino/tree/master/examples
 
-https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers
+## 3. API 参考
 
-下载完之后，解压，根据系统位数，双击对应可执行文件
+https://github.com/Afantor/Afantor_Bluefruit52_Arduino/blob/master/src/bluefruit52.h#L49
 
-(Windows 32位，执行 CP210xVCPInstaller_x68.exe；Windows 64位，执行 CP210xVCPInstaller_x64.exe；)
+https://www.afantor.cc/nRF52_bluefruit_Learning_Guide.html
 
-*判断驱动安装是否成功：*
-如果安装成功，在插入 Bluefruit52 主控之后，设备管理器如下图所示出现，Silicon Labs 的 CP21x 系列串口端口号
-(我的电脑当前串口号是 COM3)
+## 4. H/W 参考
 
-![image](arduino-ide/win-screenshots_cn/my_com.png)
+#### 管脚映射
 
+*我们有几个不同版本的主控，可以直接查看原理图[对比](https://github.com/Afantor/Afantor_Bluefruit52_Arduino/tree/master/docs/hardware).*
 
-## 二、开发环境
-## **Windows**
-### 1、安装 Arduino IDE
+**LCD & TF Card**
 
-*下载地址*
-https://www.arduino.cc/en/Main/Software 
+*LCD 分辨率: 135x240*
 
-![image](arduino-ide/win-screenshots_cn/arduino_cc_package.png)
+<table>
+ <tr><td>nRF52 Chip</td><td>P0.07</td><td>P0.27</td><td>P0.16</td><td>P0.23</td><td>P0.24</td><td>~CS</td></tr>
+ <tr><td>ST7789</td><td>SDA</td><td>SCL</td><td>DC</td><td>RST</td><td>CS</td><td>BL</td></tr>
 
+</table>
 
-如下图所示修改 Arduino 路径为 D:\Program Files
+**Button**
 
-![image](arduino-ide/win-screenshots_cn/select_arduino_install_path.png)
+<table>
+ <tr><td>nRF52 Chip</td><td>P0.18</td><td>P0.11</td></tr>
+ <tr><td>Button Pin</td><td>BUTTON 1</td><td>BUTTON 2</td></tr>
+</table>
 
+**MPU6050**
 
-此时，Arduino 的安装路径为 D:\Program Files\Arduino
-
-![image](arduino-ide/win-screenshots_cn/arduino_path.png)
-
-
-### 2、下载 nRF52832 支持包
-
-（我的 Arduino 当前路径是 D:\Program Files\arduino）
-
-进入 Arduino 安装路径的 hareware 文件夹，按住 Shift 键的同时，右键选择“在此处打开命令窗口”
-
-未完待续......
+<table>
+ <tr><td>nRF52 Chip</td><td>P0.26</td><td>P0.25</td></tr>
+ <tr><td>MPU6050</td><td>SCL</td><td>SDA</td></tr>
+</table>
 
 
-### 3、下载 nRF52832 编译链 tools
+### M-BUS
+![image](docs/images/Bluefruit52_Pinconfig.png)
+![image](docs/images/Bluefruit52_Pinout.png)
 
-未完待续......
+#### Note:
 
+* 如何安装 CP210x 串口驱动
 
-### 4、为Arduino IDE 添加Adafruit_nRF52_Arduino和Afantor_Bluefruit52_Arduino 的库
+  https://docs.m5stack.com/#/zh_CN/related_documents/establish_serial_connection
 
-未完待续......
+* 如何升级 Adafruit_nRF52_Arduino 库和 Afantor_Bluefruit52_Arduino 库
 
-## 三、示例
-
-USB 线连接 Bluefruit52 主控，选择串口和一个示例程序，compile and upload
-
-### 1、打开一个示例程序，如打开 blinky.ino
-
-
-
-确认连接板子名称、和当前串口号分别：COM3(当前电脑串口号)
-
-
-
-编译运行成功之后，串口监视窗口显示如下
-
-
-
-### 2、新建一个 nRF52832 程序
-
-打开 Arduino IDE 之后，新建 .ino 文件，并保存为 my_test.ino
-
-将如下代码拷贝进文件中。
-
-```cpp
-#include <bluefruit.h>
-#include <bluefruit52.h>
-// the setup routine runs once when Bluefruit52 starts up
-void setup(){
-
-  // Initialize the Bluefruit52 object
-  BF52.begin(true, true, false);
-
-  // LCD display
-  BF52.Lcd.fillScreen(BLACK);
-  BF52.Lcd.setTextColor(YELLOW);
-  BF52.Lcd.setTextSize(2);
-  BF52.Lcd.println("Hello World!");
-  BF52.Lcd.println("Bluefruit52 is running"); 
-  BF52.Lcd.println(" successfully!");   
-}
-
-// the loop routine runs over and over again forever
-void loop() {
-
-}
-```
-
-点击编译运行下载，此时 Bluefruit52 显示器显示 "Hello World!" "Bluefruit52 is running successfully!"
-
-
+  https://docs.m5stack.com/#/zh_CN/related_documents/upgrade_m5stack_lib
