@@ -1,6 +1,6 @@
 ﻿# nRF52832 Bluefruit 库
 
-English(../README.md) | [中文] | [日本語](docs/getting_started_ja.md)
+[English](README.md) | 中文 | [日本語](docs/getting_started_ja.md)
 
 ## 1. 上手指南
 
@@ -55,8 +55,8 @@ https://www.afantor.cc/nRF52_bluefruit_Learning_Guide.html
 
 
 ### M-BUS
-![image](docs/images/Bluefruit52_Pinconfig.png)
-![image](docs/images/Bluefruit52_Pinout.png)
+![image](images/Bluefruit52_Pinconfig.png)
+![image](images/Bluefruit52_Pinout.png)
 
 #### Note:
 
