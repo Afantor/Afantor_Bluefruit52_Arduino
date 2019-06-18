@@ -38,13 +38,16 @@ https://www.arduino.cc/en/Main/Software
 ![image](arduino-ide/win-screenshots_cn/arduino_path.png)
 
 
-### 2、下载 nRF52832 支持包
+### 2、下载 Afantor nRF52832 支持包
 
 （我的 Arduino 当前路径是 D:\Program Files\arduino）
 
-进入 Arduino 安装路径的 hareware 文件夹，按住 Shift 键的同时，右键选择“在此处打开命令窗口”
+进入 Arduino 安装路径的 libraries 文件夹，按住 Shift 键的同时，右键选择“在此处打开命令窗口”，打开CMD命令窗口，使用“git clone ”
 
-未完待续......
+命令远程下载Afantor nRF52832库包。
+
+![image](images/shift_cmd.jpg)
+![image](images/git_cmd.jpg)
 
 
 ### 3、下载 nRF52832 编译链 tools
@@ -52,7 +55,7 @@ https://www.arduino.cc/en/Main/Software
 未完待续......
 
 
-### 4、为Arduino IDE 添加Adafruit_nRF52_Arduino和Afantor_Bluefruit52_Arduino 的库
+### 4、打开Arduino IDE 验证Adafruit_nRF52_Arduino和Afantor_Bluefruit52_Arduino 的库
 
 未完待续......
 
