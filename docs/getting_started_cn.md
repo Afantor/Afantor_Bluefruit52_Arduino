@@ -1,6 +1,6 @@
 ﻿# nRF52832 Bluefruit 库
 
-[English](README.md) | 中文 | [日本語](docs/getting_started_ja.md)
+[English](../README.md) | 中文 | [日本語](docs/getting_started_ja.md)
 
 ## 1. 上手指南
 
