@@ -12,7 +12,7 @@ Welcome to program with Bluefruit52 nRF52832 Core
 
 *1.For MacOS*
 
-Coming soon...
+* [Install the Bluefruit52 board for Arduino](https://www.afantor.cc/nRF52_bluefruit_Learning_Guide.html#arduino-bsp-setup)
 
 *2. For Windows*
 

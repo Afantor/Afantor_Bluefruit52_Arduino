@@ -50,14 +50,24 @@ https://www.arduino.cc/en/Main/Software
 ![image](images/git_cmd.jpg)
 
 
-### 3、下载 nRF52832 编译链 tools
+### 3、下载安装 nRF52832 编译链工具
 
-未完待续......
+打开Arduino IDE，进入“文件”菜单下的“首选项”；
+
+在“附加开发板管理器网址”中增加 https://www.adafruit.com/package_adafruit_index.json
+
+然后关闭IDE，重新打开Arduino IDE；
+
+进入“工具”菜单栏，打开“开发板管理器”，等待联网更新数据，完成后在搜索框中搜索：nrf52
+
+找到“Adafruit nRF52”，点击安装即可，等待时间会很久，请不要关闭Arduino。
+
+安装完成后，打开“工具”菜单下，选择“开发板”，找到“Adafruit nRF52832 Boards” 下的 “Adafruit Bluefruit nRF52832 Feather”，环境即搭建完成。
 
 
 ### 4、打开Arduino IDE 验证Adafruit_nRF52_Arduino和Afantor_Bluefruit52_Arduino 的库
 
-未完待续......
+打开Arduino IDE，选择“Adafruit Bluefruit nRF52832 Feather”开发板，进入“文件”菜单下的“示例”，找到“Adafruit Bluefruit nRF52 Libraries” 和 “Afantor Bluefruit52” 里面即是例程库。
 
 ## 三、示例
 

@@ -113,7 +113,7 @@ void connect_callback(uint16_t conn_handle)
 
     // BLEClientHidAdafruit currently only suports Boot Protocol Mode
     // for Keyboard and Mouse. Let's set the protocol mode on prph to Boot Mode
-    hid.setProtocolMode(HID_PROTOCOL_MODE_BOOT);
+    hid.setBootMode(true);
 
     // Enable Keyboard report notification if present on prph
     if ( hid.keyboardPresent() ) hid.enableKeyboard();
@@ -206,7 +206,7 @@ void processKeyboardReport(hid_keyboard_report_t* report)
       
       if ( kc < 128 )
       {
-        ch = shifted ? HID_KEYCODE_TO_ASCII[kc].shifted : HID_KEYCODE_TO_ASCII[kc].ascii;
+        ch = shifted ? hid_keycode_to_ascii[kc][1] : hid_keycode_to_ascii[kc][0];
       }else
       {
         // non-US keyboard !!??

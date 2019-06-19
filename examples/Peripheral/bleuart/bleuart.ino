@@ -13,6 +13,8 @@
 *********************************************************************/
 #include <bluefruit.h>
 #include <bluefruit52.h>
+#include <Adafruit_LittleFS.h>
+#include <InternalFileSystem.h>
 // BLE Service
 BLEDfu  bledfu;  // OTA DFU service
 BLEDis  bledis;  // device information
@@ -115,7 +117,7 @@ void loop()
   }
 
   // Request CPU to enter low-power mode until an event/interrupt occurs
-  waitForEvent();
+  //waitForEvent();
 }
 
 // callback invoked when central connects
