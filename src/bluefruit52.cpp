@@ -45,7 +45,7 @@ AfantorBluefruit52::AfantorBluefruit52(void):isInited(0){
 
 }
 
-void AfantorBluefruit52::begin(bool LCDEnable, bool SerialEnable, bool IMUEnable) {
+void AfantorBluefruit52::begin(bool SerialEnable, bool LCDEnable, bool IMUEnable) {
 
   // Correct init once
   if (isInited) return;
@@ -56,7 +56,7 @@ void AfantorBluefruit52::begin(bool LCDEnable, bool SerialEnable, bool IMUEnable
     Serial.begin(115200);
     Serial.flush();
     delay(50);
-    Serial.print("Bluefruit52 initializing...");
+    Serial.println("Bluefruit52 initializing...");
   }
 
   // LCD INIT
@@ -88,58 +88,55 @@ void AfantorBluefruit52::begin(bool LCDEnable, bool SerialEnable, bool IMUEnable
     Lcd.setTextColor(RED);
     Lcd.setTextSize(2);
     Lcd.println(" initializing......");
-    delay(1500);
+    delay(500);
   }
 
   // I2C init
   Wire.begin();
   delay(10);
 
-  //MPU6050 init
+  //BMI160 init
   if (IMUEnable)
   {
-    Serial.println("MPU6050 6-DOF 16-bit motion sensor 60 ug LSB!");
+    Serial.println("BMI160 6-DOF 16-bit motion sensor 60 ug LSB!");
    
-     // Read the WHO_AM_I register, this is a good test of communication
-    uint8_t imu_add = IMU.readByte(MPU6050_ADDRESS, WHO_AM_I_MPU6050);  // Read WHO_AM_I register for MPU-6050
-    Serial.print("I AM ");
-    Serial.print(imu_add, HEX);  
-    Serial.print(" I Should Be ");
-    Serial.println(MPU6050_ADDRESS, HEX); // Device address is 0x68 when ADO = 0
+    // initialize device
+    Serial.println("Initializing IMU device...");
 
-    if (imu_add == MPU6050_ADDRESS) {
-      Serial.println("MPU6050 is online...");
-      Serial.println("Bluefruit52 init OK");
-      if (LCDEnable) {
-        Lcd.setTextColor(BLUE);
-        Lcd.setTextSize(2);
-        Lcd.println(" MPU6050 is online!");
-      }      
+    IMU.begin(BMI160GenClass::I2C_MODE, 0x69, 30);
+    uint8_t dev_id = IMU.getDeviceID();
+    Serial.print("DEVICE ID: 0x");
+    Serial.println(dev_id, HEX);
+    if (dev_id == 0xd1 )
+    {
+      Serial.println("BMI160 device Online...");
     }
     else
     {
-      Serial.print("Could not connect to MPU6050: 0x");
-      Serial.println(imu_add, HEX);
-      if (LCDEnable) {
-        Lcd.setTextColor(YELLOW);
-        Lcd.setTextSize(2);
-        Lcd.println(" MPU6050 is Error!");
-        Lcd.setTextColor(BLUE);
-        Lcd.setTextSize(2);
-        Lcd.println(" Press RESET Again!");
-      }
       while(1) // Loop forever if communication doesn't happen
       {
+        Serial.println("Could not connect to BMI160: 0xD1");
         Serial.println("Please check if the hardware device is damaged.");
-        delay(1000); 
       }
-    }   
+    }
+
+     // Set the accelerometer range to 2000 degrees/second
+    IMU.setGyroRate(3200);
+    IMU.setGyroRange(2000);
+     // Set the accelerometer range to 2000 degrees/second
+    IMU.setAccelerometerRate(1600);
+    IMU.setAccelerometerRange(2);
+    Serial.println("Initializing IMU device...done."); 
   }
+  
   if (LCDEnable) {
     Lcd.setTextColor(RED);
     Lcd.setTextSize(2);
     Lcd.println(" Initialize Done!");
-    delay(1000);
+    delay(100);
+  }
+  if (SerialEnable) {
+    Serial.println("Initialize Done!");
   }
 }
 

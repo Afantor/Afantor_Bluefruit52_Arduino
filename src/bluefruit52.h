@@ -132,14 +132,16 @@
 
 #include "utility/config.h"
 #include "utility/button.h"
-#include "utility/MPU6050.h"
 #include "utility/ST7789.h"
+#include "utility/BMI160.h"
+#include "utility/BMI160Gen.h"
+#include "utility/CurieIMU.h"
 
 class AfantorBluefruit52
 {
   public:
     AfantorBluefruit52(void); // Constructor
-    void begin(bool LCDEnable=true, bool SerialEnable=true, bool IMUEnable=true);
+    void begin( bool SerialEnable=true, bool LCDEnable=true, bool IMUEnable=false);
     void update();
     // Button API
     #define DEBOUNCE_MS 10
@@ -149,8 +151,9 @@ class AfantorBluefruit52
     // LCD
     LCD_ST7789 Lcd = LCD_ST7789(LCD_DC_PIN, LCD_RST_PIN, LCD_SDA_PIN, LCD_SCL_PIN);
 
-    //MPU6050
-    MPU6050 IMU = MPU6050();
+    //BMI160
+    BMI160GenClass IMU;
+
   private:
     bool isInited;
 };
