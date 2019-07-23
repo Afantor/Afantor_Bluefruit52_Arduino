@@ -1,7 +1,7 @@
 /*
   ===============================================
   Example sketch for BMI160 library for Intel(R) Curie(TM) devices.
-  Copyright (c) 2015 Intel Corporation.  All rights reserved.
+  Copyright (c) 2019 CallMeCode Corporation.  All rights reserved.
 
   Based on I2C device class (I2Cdev) demonstration Arduino sketch for MPU6050
   class by Jeff Rowberg: https://github.com/jrowberg/i2cdevlib
