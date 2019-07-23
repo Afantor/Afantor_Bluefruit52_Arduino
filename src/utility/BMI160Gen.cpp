@@ -13,8 +13,7 @@ bool BMI160GenClass::begin(Mode mode, const int arg1, const int arg2)
 {
     this->mode = mode;
     switch (this->mode) {
-    case INVALID_MODE:
-        return false;
+    case INVALID_MODE:        return false;
     case I2C_MODE:
         i2c_addr = arg1;
         break;

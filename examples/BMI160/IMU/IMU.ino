@@ -16,54 +16,7 @@
  GND ---------------------- GND
  
  */
-#include <arduino.h>
-#include <Wire.h>
-#include <SPI.h>
-
-// Bosch BMI160 accel/gyro
-// see https://ae-bst.resource.bosch.com/media/_tech/media/datasheets/BST-BMI160-DS000-07.pdf
-//
-#define BMI160_CHIP_ID        0x00
-#define BMI160_ERR_REG        0x02
-#define BMI160_PMU_STATUS     0x03
-#define BMI160_GYRO_DATA      0x0C // 0x04 - 0x17 0x0C is start of gyro  data
-#define BMI160_ACCEL_DATA     0x12 // 0x04 - 0x17 0x12 is start of accel data
-#define BMI160_SENSORTIME     0x18 // 0x18 - 0x1A
-#define BMI160_STATUS         0x1B
-#define BMI160_INT_STATUS     0x1C // 0x1C - 0x1F
-#define BMI160_TEMPERATURE    0x20 // 0x20 - 0x21
-#define BMI160_FIFO_LENGTH    0x22 // 0x22 - 0x23
-#define BMI160_FIFO_DATA      0x24 // 1024 bytes
-#define BMI160_ACC_CONF       0x40
-#define BMI160_ACC_RANGE      0x41
-#define BMI160_GYR_CONF       0x42
-#define BMI160_GYR_RANGE      0x43
-#define BMI160_MAG_CONF       0x44
-#define BMI160_FIFO_DOWNS     0x45
-#define BMI160_FIFO_CONFIG    0x46 // 0x46 - 0x47
-#define BMI160_MAG_IF         0x4B // 0x4B - 0x4F
-#define BMI160_INT_EN         0x50 // 0x50 - 0x52
-#define BMI160_INT_OUT_CTRL   0x53
-#define BMI160_INT_LATCH      0x54
-#define BMI160_INT_MAP        0x55 // 0x55 - 0x57
-#define BMI160_INT_DATA       0x58 // 0x58 - 0x59
-#define BMI160_INT_LOWHIGH    0x5A // 0x5A - 0x5E
-#define BMI160_INT_MOTION     0x5F // 0x5F - 0x62
-#define BMI160_INT_TAP        0x63 // 0x63 - 0x64
-#define BMI160_INT_ORIENT     0x65 // 0x65 - 0x66
-#define BMI160_INT_FLAT       0x67 // 0x67 - 0x68
-#define BMI160_FOC_CONF       0x69
-#define BMI160_CONF           0x6A
-#define BMI160_IF_CONF        0x6B
-#define BMI160_PMU_TRIGGER    0x6C
-#define BMI160_SELF_TEST      0x6D
-#define BMI160_NV_CONF        0x70
-#define BMI160_OFFSET         0x71 // 0x71 - 0x77
-#define BMI160_OFFSET_CONF    0x77
-#define BMI160_STEP_CNT       0x78 // 0x78 - 0x79
-#define BMI160_STEP_CONF      0x7A // 0x7A - 0x7B
-#define BMI160_CMD            0x7E
-
+#include <bluefruit52.h>
 
 #define BMI160_ADDRESS 0x69  // Device address when ADO = 1
 
@@ -125,8 +78,8 @@ enum GBW {
 
 //
 // Specify sensor full scale
-uint8_t Gscale = GFS_250DPS, GODR = Grate200Hz, GBW = GBW_2X;
-uint8_t Ascale = AFS_2G, AODR = Arate200Hz, ABW = ABW_2X;
+uint8_t Gscale = GFS_2000DPS, GODR = Grate3200Hz, GBW = GBW_2X;
+uint8_t Ascale = AFS_2G, AODR = Arate1600Hz, ABW = ABW_2X;
 float aRes, gRes;      // scale resolutions per LSB for the sensors
 
 // Pin definitions
@@ -185,14 +138,15 @@ void setup()
 
   // Read the WHO_AM_I register, this is a good test of communication
   Serial.println("BMI160 6-axis motion sensor...");
-  byte c = readByte(BMI160_ADDRESS, BMI160_CHIP_ID); 
+  BMI160.begin(BMI160GenClass::I2C_MODE, i2c_addr, irq_pin);
+  uint8_t dev_id = BMI160.getDeviceID();
   Serial.print("BMI160,I AM 0x"); 
-  Serial.println(c, HEX); 
+  Serial.println(dev_id, HEX); 
   Serial.print(" I should be "); Serial.println(0xD1, HEX);
    
   delay(1000); 
 
-  if (c == 0xD1) // WHO_AM_I should always be ACC/GYRO = 0xD1, MAG = 0x48 
+  if (dev_id == 0xD1) // WHO_AM_I should always be ACC/GYRO = 0xD1, MAG = 0x48 
   {  
     Serial.println("BMI160 are online...");
   
@@ -234,7 +188,7 @@ void setup()
   else
   {
     Serial.print("Could not connect to BMI160: 0x");
-    Serial.println(c, HEX);
+    Serial.println(dev_id, HEX);
     while(1) ; // Loop forever if communication doesn't happen
   }
 }

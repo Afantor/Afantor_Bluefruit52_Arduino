@@ -23,6 +23,6 @@ class BMI160GenClass : public CurieIMUClass {
         int spi_xfer(uint8_t *buf, unsigned tx_cnt, unsigned rx_cnt);
 };
 
-extern BMI160GenClass IMU;
+extern BMI160GenClass BMI160;
 
 #endif /* _BMI160GEN_H_ */

@@ -21,32 +21,37 @@
 
 #include <bluefruit52.h>
 
-#include <BMI160Gen.h>
-
 const int irq_pin = 30;
 const int i2c_addr = 0x69;
 
 
 void setup() {
   Serial.begin(115200); // initialize Serial communication
-
+  Wire.begin();
 
   // initialize device
   Serial.println("Initializing IMU device...");
-  // BMI160.begin(BMI160GenClass::SPI_MODE, /* SS pin# = */10);
+
   BMI160.begin(BMI160GenClass::I2C_MODE, i2c_addr, irq_pin);
   uint8_t dev_id = BMI160.getDeviceID();
   Serial.print("DEVICE ID: ");
   Serial.println(dev_id, HEX);
 
-   // Set the accelerometer range to 2000 degrees/second
+   // Set the gyro range to 2000 degrees/second
+  BMI160.setGyroRate(3200);
   BMI160.setGyroRange(2000);
-  Serial.println("Initializing IMU device...done.");
+   // Set the accelerometer range to 2g
+  BMI160.setAccelerometerRate(1600);
+  BMI160.setAccelerometerRange(2);
+  Serial.println("Initializing BMI160 device...done.");
 }
 
 void loop() {
   int gxRaw, gyRaw, gzRaw;         // raw gyro values
   float gx, gy, gz;
+
+  int axRaw, ayRaw, azRaw;         // raw accel values
+  float ax, ay, az;
 
   // read raw gyro measurements from device
   BMI160.readGyro(gxRaw, gyRaw, gzRaw);
@@ -65,6 +70,23 @@ void loop() {
   Serial.print(gz);
   Serial.println();
 
+  // read raw accel measurements from device
+  BMI160.readAccelerometer(axRaw, ayRaw, azRaw);
+
+  // convert the raw accel data to g
+  ax = convertRawAccel(axRaw);
+  ay = convertRawAccel(ayRaw);
+  az = convertRawAccel(azRaw);
+
+  // display tab-separated accel x/y/z values
+  Serial.print("Accel:\t");
+  Serial.print(ax);
+  Serial.print("\t");
+  Serial.print(ay);
+  Serial.print("\t");
+  Serial.print(az);
+  Serial.println();
+
   delay(100);
 }
 
@@ -73,11 +95,20 @@ float convertRawGyro(int gRaw) {
   // -2000 maps to a raw value of -32768
   // +2000 maps to a raw value of 32767
 
-  float g = (gRaw * 2000.0) / 32767.0;
+  float gyro = (gRaw * 2000.0) / (32767.0 * 57.29577);
 
-  return g;
+  return gyro;
 }
 
+float convertRawAccel(int aRaw) {
+  // since we are using 2g range
+  // -2g to a raw value of -32768
+  // +2g to a raw value of 32767
+
+  float accel = ((aRaw * 2.0) / 32768.0) * 9.8;
+
+  return accel;
+}
 
 
 
